@@ -1,0 +1,68 @@
+2024-12-22 19:30:22.251441 INFO::Writing function arguments to log file
+2024-12-22 19:30:22.255384 DEBUG::Function arguments
+2024-12-22 19:30:22.260315 DEBUG::Output folder: Maaslin2_output_spa_genes_rpkm
+2024-12-22 19:30:22.263265 DEBUG::Min Abundance: 0.000000
+2024-12-22 19:30:22.265315 DEBUG::Min Prevalence: 0.200000
+2024-12-22 19:30:22.267464 DEBUG::Normalization: TSS
+2024-12-22 19:30:22.269418 DEBUG::Transform: LOG
+2024-12-22 19:30:22.271522 DEBUG::Analysis method: LM
+2024-12-22 19:30:22.273496 DEBUG::Max significance: 0.250000
+2024-12-22 19:30:22.28047 DEBUG::Random effects:
+2024-12-22 19:30:22.282716 DEBUG::Fixed effects: status
+2024-12-22 19:30:22.284466 DEBUG::Correction method: BH
+2024-12-22 19:30:22.285889 DEBUG::Standardize: TRUE
+2024-12-22 19:30:22.287975 DEBUG::Cores: 1
+2024-12-22 19:30:22.29 INFO::Verifying options selected are valid
+2024-12-22 19:30:22.297066 INFO::Determining format of input files
+2024-12-22 19:30:22.301896 INFO::Input format is data samples as rows and metadata samples as rows
+2024-12-22 19:30:22.30837 DEBUG::A total of 18 samples were found in both the data and metadata
+2024-12-22 19:30:22.311837 DEBUG::Reordering data/metadata to use same sample ordering
+2024-12-22 19:30:22.31506 INFO::Formula for fixed effects: expr ~  status
+2024-12-22 19:30:22.320212 INFO::Filter data based on min abundance and min prevalence
+2024-12-22 19:30:22.328291 INFO::Total samples in data: 18
+2024-12-22 19:30:22.332726 INFO::Min samples required with min abundance for a feature not to be filtered: 3.600000
+2024-12-22 19:30:22.340547 INFO::Total filtered features: 20
+2024-12-22 19:30:22.350857 INFO::Filtered feature names from abundance and prevalence filtering: nimJ, tet.Q., vanY_gene_in_vanF_cluster, tetR, vanW_gene_in_vanB_cluster, nimA, nimI, ErmF, mtrA, pmrA, vanH_gene_in_vanF_cluster, ANT.2....Ia, APH.3...IIIa, Klebsiella_pneumoniae_KpnH, Neisseria_gonorrhoeae_gyrA_conferring_resistance_to_fluoroquinolones, tet.W., vanH_gene_in_vanO_cluster, tet.O., APH.6..Id, Mycobacterium_tuberculosis_rpsL_mutations_conferring_resistance_to_Streptomycin
+2024-12-22 19:30:22.356006 INFO::Total filtered features with variance filtering: 0
+2024-12-22 19:30:22.365703 INFO::Filtered feature names from variance filtering:
+2024-12-22 19:30:22.370436 INFO::Running selected normalization method: TSS
+2024-12-22 19:30:22.379021 INFO::Applying z-score to standardize continuous metadata
+2024-12-22 19:30:22.388731 INFO::Running selected transform method: LOG
+2024-12-22 19:30:22.399523 INFO::Running selected analysis method: LM
+2024-12-22 19:30:22.410354 INFO::Fitting model to feature number 1, APH.3....Ib
+2024-12-22 19:30:22.424811 INFO::Fitting model to feature number 2, Haemophilus_influenzae_PBP3_conferring_resistance_to_beta.lactam_antibiotics
+2024-12-22 19:30:22.437053 INFO::Fitting model to feature number 3, TEM.1
+2024-12-22 19:30:22.454383 INFO::Fitting model to feature number 4, patA
+2024-12-22 19:30:22.469393 INFO::Fitting model to feature number 5, sul2
+2024-12-22 19:30:22.486103 INFO::Fitting model to feature number 6, tet.M.
+2024-12-22 19:30:22.500682 INFO::Fitting model to feature number 7, vanW_gene_in_vanG_cluster
+2024-12-22 19:30:22.517073 INFO::Fitting model to feature number 8, vanW_gene_in_vanI_cluster
+2024-12-22 19:30:22.533723 INFO::Fitting model to feature number 9, vanY_gene_in_vanA_cluster
+2024-12-22 19:30:22.551155 INFO::Fitting model to feature number 10, vanY_gene_in_vanB_cluster
+2024-12-22 19:30:22.567616 INFO::Fitting model to feature number 11, vanY_gene_in_vanM_cluster
+2024-12-22 19:30:22.585331 INFO::Fitting model to feature number 12, CfxA3
+2024-12-22 19:30:22.600803 INFO::Fitting model to feature number 13, ErmX
+2024-12-22 19:30:22.615944 INFO::Fitting model to feature number 14, mdeA
+2024-12-22 19:30:22.632531 INFO::Fitting model to feature number 15, qacG
+2024-12-22 19:30:22.643977 INFO::Fitting model to feature number 16, vanT_gene_in_vanG_cluster
+2024-12-22 19:30:22.655554 INFO::Fitting model to feature number 17, vanY_gene_in_vanG_cluster
+2024-12-22 19:30:22.67162 INFO::Fitting model to feature number 18, APH.3...Ia
+2024-12-22 19:30:22.685439 INFO::Fitting model to feature number 19, CfxA2
+2024-12-22 19:30:22.697176 INFO::Fitting model to feature number 20, Escherichia_coli_EF.Tu_mutants_conferring_resistance_to_Pulvomycin
+2024-12-22 19:30:22.712292 INFO::Fitting model to feature number 21, patB
+2024-12-22 19:30:22.721521 INFO::Fitting model to feature number 22, qacJ
+2024-12-22 19:30:22.733629 INFO::Fitting model to feature number 23, tet.32.
+2024-12-22 19:30:22.746253 INFO::Fitting model to feature number 24, ErmB
+2024-12-22 19:30:22.755435 INFO::Fitting model to feature number 25, vanH_gene_in_vanP_cluster
+2024-12-22 19:30:22.777828 INFO::Counting total values for each feature
+2024-12-22 19:30:22.784251 INFO::Writing filtered data to file Maaslin2_output_spa_genes_rpkm/features/filtered_data.tsv
+2024-12-22 19:30:22.794528 INFO::Writing filtered, normalized data to file Maaslin2_output_spa_genes_rpkm/features/filtered_data_norm.tsv
+2024-12-22 19:30:22.802281 INFO::Writing filtered, normalized, transformed data to file Maaslin2_output_spa_genes_rpkm/features/filtered_data_norm_transformed.tsv
+2024-12-22 19:30:22.814802 WARNING::Deleting existing residuals file: Maaslin2_output_spa_genes_rpkm/fits/residuals.rds
+2024-12-22 19:30:22.819909 INFO::Writing residuals to file Maaslin2_output_spa_genes_rpkm/fits/residuals.rds
+2024-12-22 19:30:22.826638 WARNING::Deleting existing fitted file: Maaslin2_output_spa_genes_rpkm/fits/fitted.rds
+2024-12-22 19:30:22.831681 INFO::Writing fitted values to file Maaslin2_output_spa_genes_rpkm/fits/fitted.rds
+2024-12-22 19:30:22.838114 INFO::Writing all results to file (ordered by increasing q-values): Maaslin2_output_spa_genes_rpkm/all_results.tsv
+2024-12-22 19:30:22.846312 INFO::Writing the significant results (those which are less than or equal to the threshold of 0.250000 ) to file (ordered by increasing q-values): Maaslin2_output_spa_genes_rpkm/significant_results.tsv
+2024-12-22 19:30:22.852491 INFO::Writing heatmap of significant results to file: Maaslin2_output_spa_genes_rpkm/heatmap.pdf
+2024-12-22 19:30:22.866294 INFO::Writing association plots (one for each significant association) to output folder: Maaslin2_output_spa_genes_rpkm

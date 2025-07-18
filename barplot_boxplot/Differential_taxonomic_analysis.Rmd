@@ -1,0 +1,371 @@
+---
+title: "Differential_taxonomic_analysis"
+author: "Adrián Chalco"
+date: "2024-12-22"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(ggtext)
+library(vegan)
+setwd("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon")
+#Haciendo LefSe a nivel de todos los rangos taxonómicos y rarefaccion
+res<-read.delim("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/lefse/lefse_krakenout_bracken/matrix_allranks_conteo.tsv",sep = "\t")
+#TABLA DE ABUNDANCIA RELATIVA
+rela<-read_tsv("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/Stackbar_abundance/species_rel_abundance.tsv")
+```
+
+#Procesamiento de tabla de abundancia relativa
+```{r}
+names(rela)<-sub("\\..*","",names(rela))
+names(rela)[-c(1:4,ncol(rela))]<-sub("$","e",names(rela)[-c(1:4,ncol(rela))])
+#de NAs a 0
+rela[is.na(rela)]<-0
+```
+
+##Barplot abundancia relativs
+```{r}
+rel_abundance<-rela %>% pivot_longer(cols=starts_with("SL"),names_to = "sample_id2", values_to = "rel_abundance") %>% 
+  select(sample_id2,rel_abundance, taxRank,name) %>%
+  mutate(sample_id=sub("_.*","",sample_id2),
+            status=sub(".*_","",sample_id2)) %>% select(sample_id, status, everything(),-sample_id2) %>% 
+  rename(taxon=name) %>% 
+  arrange(sample_id) %>% 
+  mutate(sample_id=factor(sample_id, 
+                          levels=c("SL021", "SL085", "SL086", "SL088", "SL090", "SL103", "SL112", "SL114", "SL125","SL036", "SL037", "SL038", "SL048", "SL050", "SL068", "SL111", "SL118", "SL200")))
+
+#FILTRO POR TAXONOMIC RANK
+rel_abundance_dos<-rel_abundance %>% 
+  filter(taxRank=="S") %>% 
+  group_by(status,sample_id,taxon)%>% summarize(rel2=sum(rel_abundance), .groups="drop") 
+#ELIGO EL TOP_20
+top_20<-rel_abundance_dos %>%
+  group_by(taxon) %>%
+  summarize(total_abundance = median(rel2)) %>%
+  arrange(desc(total_abundance)) %>%
+  slice(1:20) %>%  # Selecciona el top 20 de especies
+  pull(taxon)
+
+#AGRUPO Others Y EDITO NOMBRES DE TAXONES PARA QUE SALGAN BONITOS EN GRAFICA
+rel_abundance_dos_edit<-rel_abundance_dos %>%   
+  mutate(taxon = ifelse(taxon %in% top_20, taxon, "Others")) %>% 
+  group_by(status,sample_id,taxon)%>% summarize(rel=sum(rel2), .groups="drop") %>% #unir los Others
+  mutate(taxon=str_replace(taxon,
+                           "^(?!Others$).*","*\\0*"))  %>% 
+  mutate(taxon = reorder(taxon, -rel)) %>%
+  mutate(taxon = factor(taxon, levels = c(levels(taxon)[levels(taxon) != "Others"], "Others")))
+
+#comprobar que suma es 100 para cada taxon
+rel_abundance_dos_edit %>% group_by(sample_id) %>% summarise(total=sum(rel))
+
+custom_palette <- c("#3C8A9B", "#E17597", "#D4AE2D", "#E884B9", "#54A453", "#BD6066", "#FF990A", 
+                    "#469F6C", "#FFCF20", "#526E9F", "#E97422", "#94539E", "#9B445D", 
+                    "#C08EA9", "#999999","#AF6729", "#BF6357", "#747B78", "#FAF632", "#E41A1C", "gray")
+#Plot
+rel_abundance_dos_edit %>%
+  group_by(status, sample_id) %>%
+  mutate(abundancia_Others = sum(rel[taxon == "Others"])) %>%  # Calcula la abundancia de "Others"
+  ungroup() %>%
+  ggplot(aes(x = reorder(sample_id, abundancia_Others), y = rel, fill = taxon))+ ##ordeno de acuerdo a abundancia de Others
+  geom_col() +
+  theme_classic() +
+  scale_fill_manual(values = custom_palette, name = NULL) + #quita el nombre de la leyenda de los colores fill 
+  #+  scale_x_discrete(breaks=c(), labels=c(<br>*italic*<br>)) cambiar nombres de barras en eje x y usar cosas ggtext (<br> es salto de linea)
+  theme(axis.text.x = element_markdown(angle = 45, hjust = 1),
+        legend.text=element_markdown(),
+        legend.key.size=unit(10,"pt"))+
+  labs(y = "Relative abundance (%)", x = NULL)+
+  facet_wrap(~ status,scales = "free_x", nrow = 1,     labeller = as_labeller(c("active" = "Caries", "free" = "Health"))
+) #cada faceta con su propio eje X ajustado y ambas en la misma fila
+
+ggsave(
+  filename = "relative_abundance_plot.png", # Nombre del archivo
+  width = 12, # Ancho en pulgadas
+  height = 6, # Altura en pulgadas
+  dpi = 300,   # Resolución en DPI
+  bg="white"
+
+  )
+```
+
+
+## Procesamiento de tabla con conteos crudos
+```{r}
+str(res)
+table(res$taxRank)
+res<-res[,-c(2,3,4,ncol(res))]
+dim(res)
+#convertir a numero
+res[,-1]<-sapply(res[,-1],as.numeric)
+#cambiar NA a 0.0
+res[is.na(res)]<-0
+sapply(lapply(res,is.na),sum)
+#cambiar nombre de columna a solo el ID
+names(res)<-sub("_.*","",names(res))
+
+```
+
+## Rarefacción de conteos al tamaño de muestra minimo para luego obtener el archivo input de lefse:
+Obtener archivo lefse_fullranks_counts.tsv a partir de dataframe res
+Direccion de lefse: 
+```{r}
+#conectar nombres por guion bajo
+res$name<-gsub(" ","_",res$name)
+
+#otra opcion: rename_with(~ sub("_.*", "", .))
+##RAREFACCIÓN
+set.seed(100)
+count_matrix <- res[, -1]
+rownames(count_matrix) <- make.unique(res$name)
+count_matrix_t <- t(count_matrix)
+min_count <- min(rowSums(count_matrix_t))
+rarefied_matrix <- rrarefy(count_matrix_t, sample = min_count)
+rarefied_matrix <- t(rarefied_matrix)
+rarefied_df <- as.data.frame(rarefied_matrix)
+status<-c("status", "caries_free", "caries_active", "caries_active", "caries_active", "caries_active", 
+          "caries_active", "caries_active", "caries_free", "caries_free", "caries_free", "caries_free", 
+          "caries_free", "caries_active", "caries_free", "caries_free", "caries_active", "caries_free", 
+          "caries_active")
+status<-as.data.frame(t(status))
+names(status)<-colnames(res)
+
+# Agrega los nombres de las filas como una nueva columna
+rarefied_df$name <- rownames(rarefied_df)
+
+# Reorganiza las columnas para que 'name' sea la primera
+rarefied_df <- rarefied_df[, c("name", colnames(rarefied_df)[-ncol(rarefied_df)])]
+
+df<-rbind(status,rarefied_df)
+dim(df)
+any(is.na(df))
+sum(sapply(df,is.infinite))
+
+write.table(df,file="lefse_fullranks_counts.tsv",sep="\t",row.names=FALSE,quote = FALSE)
+```
+
+
+Boxplot abundancia relativa antes de la rarefaccion
+
+```{r}
+especies_caries <- c(
+  "Leptotrichia sp. HMT-225",
+  "Leptotrichia trevisanii",
+  "Leptotrichia hofstadii",
+  "Leptotrichia wadei",
+  "Leptotrichia hongkongensis",
+  "Schaalia sp. HMT-172",
+  "Streptococcus mutans",
+  "Campylobacter rectus",
+  "Selenomonas sputigena",
+  "Leptotrichia sp. oral taxon 847"
+)
+rela<-rela %>% filter(name %in% especies_caries) %>% as.data.frame()
+rela<-rela[,-c(2:4,23)]
+names(rela)<-c("name",sub("(^[^_]*).*","\\1",names(rela)[-1]))
+data_long <- rela %>%
+  pivot_longer(cols = -name, names_to = "Sample", values_to = "Value") %>%
+  left_join(status %>% pivot_longer(cols = -name, names_to = "Sample", values_to = "Status"), by = "Sample")
+# Verifica el relaultado para asegurarte de que la transformación sea correcta
+str(data_long)
+medianas <- data_long %>%
+  group_by(name.x) %>%
+  summarise(median_value = median(Value, na.rm = TRUE))
+data_long <- data_long %>%
+  mutate(name.x = factor(name.x, levels = medianas$name.x[order(medianas$median_value)]))
+
+# Supongamos que `data_long_abundance` es el nombre del data frame que contiene la abundancia relativa
+ggplot(data_long, aes(x = name.x, y = Value, fill = Status)) +
+  geom_boxplot(alpha = 0.7, color = "black", position = position_dodge(width = 0.75), outlier.shape = NA) +  # Boxplot sin outliers visibles
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.75), 
+              size = 1.5, alpha = 0.8, aes(color = Status))  +  # Puntos en lugar de jitter, con borde
+   scale_fill_manual(
+    values = c("caries_free" = "#66C2A5", "caries_active" = "#FC8D62"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  ) +
+  scale_color_manual(
+    values = c("caries_free" = "#66C2A5", "caries_active" = "#FC8D62"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  )+
+  labs(x = "Species", y = "Relative Abundance", fill = "Status", color = "Status",
+       title = "Relative Abundance of Bacterial Species Associated with Caries") +  # Etiquetas y título
+  theme_minimal(base_size = 14) +  # Tema minimalista con tamaño de texto base
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10),  # Rotar etiquetas de x
+    axis.text.y = element_text(size = 10),  # Tamaño de texto de y
+    axis.title = element_text(size = 14, face = "bold"),  # Tamaño y negrita de títulos de ejes
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),  # Título centrado
+    legend.title = element_text(size = 14),  # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)  # Tamaño del texto de la leyenda
+  ) +
+  scale_y_log10(breaks = c(0,0.00005,0.0002,0.0005,0.001,0.002,0.005,0.01,0.02,0.05)*100,
+                labels = paste0(c(0,0.00005,0.0002,0.0005,0.001,0.002,0.005,0.01,0.02,0.05)*100,"%"))
+
+ggsave("boxplot_abundance_diffspecies_caries_beforerare.png", width = 10, height = 6, dpi = 300, bg="white")
+
+
+
+```
+
+Boxplot conteo absoluto antes de la rarefaccion
+
+```{r}
+###CONTEO ABSOLUTO
+res2<-res %>% filter(name %in% gsub("\\s","_",especies_caries))
+data_long <- res2%>%
+  pivot_longer(cols = -name, names_to = "Sample", values_to = "Value") %>%
+  left_join(status %>% pivot_longer(cols = -name, names_to = "Sample", values_to = "Status"), by = "Sample")
+# Verifica el resultado para asegurarte de que la transformación sea correcta
+str(data_long)
+data_long$Value <- as.numeric(data_long$Value)
+#agrupar por mediana
+# Calcular la mediana de cada grupo
+medianas <- data_long %>%
+  group_by(name.x) %>%
+  summarise(median_value = median(Value, na.rm = TRUE))
+
+data_long <- data_long %>%
+  mutate(name.x = factor(name.x, levels = medianas$name.x[order(medianas$median_value)]))
+
+ggplot(data_long, aes(x = name.x, y = Value, fill = Status)) +
+  geom_boxplot(alpha = 0.7, color = "black", position = position_dodge(width = 0.75), outlier.shape = NA) +  # Ajuste para evitar superposición
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.75), 
+              size = 1.5, alpha = 0.8, aes(color = Status)) +  # Ajuste del jitter
+    scale_fill_manual(
+    values = c("caries_free" = "#56B4E9", "caries_active" = "#D55E00"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  ) +
+  scale_color_manual(
+    values = c("caries_free" = "#56B4E9", "caries_active" ="#D55E00"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  )+
+  labs(x = "Species", y = "Read Count", fill = "Status", color = "Status",
+       title = "Read Count of Bacterial Species Associated with Caries") +  # Etiquetas y título
+  theme_minimal(base_size = 14) +  # Tema minimalista con tamaño de texto base
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10),  # Rotar etiquetas de x
+    axis.text.y = element_text(size = 12),  # Tamaño de texto de y
+    axis.title = element_text(size = 14, face = "bold"),  # Tamaño y negrita de títulos de ejes
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),  # Título centrado
+    legend.title = element_text(size = 14),  # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)  # Tamaño del texto de la leyenda
+  ) +# Asegurar que la leyenda se vea correctamente
+  scale_y_log10(
+    breaks = c(1, 10, 100, 200,500,2000, 5000,20000,50000),
+    labels = c(0, 10, 100,200,500,2000, 5000,20000,50000)
+  )+  scale_x_discrete(labels = function(x) gsub("_", " ", x))
+ggsave("boxplot_count_diffspecies_caries_final.png", width = 10, height = 6, dpi = 300, bg="white")
+
+```
+
+
+Boxplot conteo absoluto tras la rarefaccion (LefSe)
+
+```{r}
+rownames(rarefied_df)<-NULL
+###CONTEO ABSOLUTO
+rarefied_df2<-rarefied_df %>% filter(name %in% gsub("\\s","_",especies_caries))
+data_long <- rarefied_df2%>%
+  pivot_longer(cols = -name, names_to = "Sample", values_to = "Value") %>%
+  left_join(status %>% pivot_longer(cols = -name, names_to = "Sample", values_to = "Status"), by = "Sample")
+# Verifica el resultado para asegurarte de que la transformación sea correcta
+str(data_long)
+data_long$Value <- as.numeric(data_long$Value)
+#agrupar por mediana
+# Calcular la mediana de cada grupo
+medianas <- data_long %>%
+  group_by(name.x) %>%
+  summarise(median_value = median(Value, na.rm = TRUE))
+
+data_long <- data_long %>%
+  mutate(name.x = factor(name.x, levels = medianas$name.x[order(medianas$median_value)]))
+
+ggplot(data_long, aes(x = name.x, y = Value, fill = Status)) +
+  geom_boxplot(alpha = 0.7, color = "black", position = position_dodge(width = 0.75), outlier.shape = NA) +  # Ajuste para evitar superposición
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.75), 
+              size = 1.5, alpha = 0.8, aes(color = Status)) +  # Ajuste del jitter
+    scale_fill_manual(
+    values = c("caries_free" = "#56B4E9", "caries_active" = "#D55E00"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  ) +
+  scale_color_manual(
+    values = c("caries_free" = "#56B4E9", "caries_active" ="#D55E00"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  )+
+  labs(x = "Species", y = "Read Count", fill = "Status", color = "Status",
+       title = "Read Count of Bacterial Species Associated with Caries (after rarefaction)") +  # Etiquetas y título
+  theme_minimal(base_size = 14) +  # Tema minimalista con tamaño de texto base
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10),  # Rotar etiquetas de x
+    axis.text.y = element_text(size = 12),  # Tamaño de texto de y
+    axis.title = element_text(size = 14, face = "bold"),  # Tamaño y negrita de títulos de ejes
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),  # Título centrado
+    legend.title = element_text(size = 14),  # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)  # Tamaño del texto de la leyenda
+  ) +# Asegurar que la leyenda se vea correctamente
+  scale_y_log10(
+    breaks = c(1, 10, 100, 200,500,2000, 5000,20000,50000),
+    labels = c(0, 10, 100,200,500,2000, 5000,20000,50000)
+  )
+ggsave("boxplot_count_differential_species_after_raref.png", width = 10, height = 6, dpi = 300, bg="white")
+
+
+```
+Boxplot abudnancia relativa tras la rarefaccion (LefSe)
+
+```{r}
+totals <- as.numeric(df[df$name == "root", -1]) # Excluye la columna 'name' para obtener solo los totale
+sample_names <- names(rarefied_df2)[-1] # Excluye la columna 'name'
+# Crear un data frame para almacenar las abundancias relativas
+relative_abundance <- rarefied_df2
+# Calcular la abundancia relativa (como porcentaje)
+for (sample in sample_names) {
+  relative_abundance[[sample]] <- (rarefied_df2[[sample]] / totals[which(sample_names == sample)]) * 100
+}
+# Ver el resultado
+print(relative_abundance)
+data_long <- relative_abundance %>%
+  pivot_longer(cols = -name, names_to = "Sample", values_to = "Value") %>%
+  left_join(status %>% pivot_longer(cols = -name, names_to = "Sample", values_to = "Status"), by = "Sample")
+# Verifica el relaultado para asegurarte de que la transformación sea correcta
+str(data_long)
+medianas <- data_long %>%
+  group_by(name.x) %>%
+  summarise(median_value = median(Value, na.rm = TRUE))
+data_long <- data_long %>%
+  mutate(name.x = factor(name.x, levels = medianas$name.x[order(medianas$median_value)]))
+
+# Supongamos que `data_long_abundance` es el nombre del data frame que contiene la abundancia relativa
+ggplot(data_long, aes(x = name.x, y = Value, fill = Status)) +
+  geom_boxplot(alpha = 0.7, color = "black", position = position_dodge(width = 0.75), outlier.shape = NA) +  # Boxplot sin outliers visibles
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.15, dodge.width = 0.75), 
+              size = 1.5, alpha = 0.8, aes(color = Status))  +  # Puntos en lugar de jitter, con borde
+   scale_fill_manual(
+    values = c("caries_free" = "#66C2A5", "caries_active" = "#FC8D62"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  ) +
+  scale_color_manual(
+    values = c("caries_free" = "#66C2A5", "caries_active" = "#FC8D62"),
+    labels = c("caries_free" = "Health", "caries_active" = "Caries")  # Modificar etiquetas de la leyenda
+  )+
+  labs(x = "Species", y = "Relative Abundance", fill = "Status", color = "Status",
+       title = "Relative Abundance of Bacterial Species Associated with Caries (after rarefaction)") +  # Etiquetas y título
+  theme_minimal(base_size = 14) +  # Tema minimalista con tamaño de texto base
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10),  # Rotar etiquetas de x
+    axis.text.y = element_text(size = 10),  # Tamaño de texto de y
+    axis.title = element_text(size = 14, face = "bold"),  # Tamaño y negrita de títulos de ejes
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),  # Título centrado
+    legend.title = element_text(size = 14),  # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)  # Tamaño del texto de la leyenda
+  ) +
+  scale_y_log10(breaks = c(0,0.00005,0.0002,0.0005,0.001,0.002,0.005,0.01,0.02,0.05)*100,
+                labels = paste0(c(0,0.00005,0.0002,0.0005,0.001,0.002,0.005,0.01,0.02,0.05)*100,"%"))+  scale_x_discrete(labels = function(x) gsub("_", " ", x))
+
+ggsave("boxplot_abundance_diffspecies_caries_afterrerare.png", width = 10, height = 6, dpi = 300, bg="white")
+
+
+
+
+```
+
+

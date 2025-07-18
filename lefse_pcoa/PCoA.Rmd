@@ -1,0 +1,316 @@
+---
+title: "PCoA"
+author: "Adrián Chalco"
+date: "2025-01-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(vegan)
+library(glue)
+library(ggrepel)
+library(openxlsx)
+library(knitr)
+library(kableExtra)
+library(RColorBrewer)
+
+```
+#INPUT: SYLPH
+```{r}
+# df_sylph<-read_tsv("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/sylph_results/results_unknown.tsv") %>% 
+#   rename(name=Contig_name) %>% 
+#   mutate(sample = gsub("^(.*?)_.*", "\\1", Sample_file)) %>% #el ? hace que no sea codicioso y solo tome hasta lo que esta antes del PRIMER "_", sino tomaria todo hasta el ultimo "_"
+#   select(c(16,4,15)) %>% 
+#   mutate(conteo=(Sequence_abundance*909628)/100) %>% 
+#   select(-c("Sequence_abundance")) %>% 
+#   arrange(sample) %>% 
+#   pivot_wider(names_from = sample,values_from = conteo,
+#               values_fill = 0)
+# df<-df_sylph
+# df$name<-gsub(" ","_",df$name)
+# rarefied_matrix<-df[, -c(1)]
+# rarefied_matrix<-t(rarefied_matrix)
+```
+#INPUT: BRAKEN->PAVIAN CONTEOS: MATRIX ALL_RANKS
+Rarefaction
+```{r}
+df<-read_tsv("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/lefse/lefse_krakenout_bracken/matrix_allranks_conteo.tsv")
+df<-df %>% filter(taxRank=="S")
+df<-df[,-c(2,3,4,ncol(df))]
+#cambiar nombre de columna a solo el ID
+names(df)<-sub("_.*","",names(df))
+df[,-1]<-sapply(df[,-1],as.numeric)
+df[is.na(df)]<-0
+#conectar nombdf por guion bajo
+df$name<-gsub(" ","_",df$name)
+df<-as.data.frame(df)
+##RAREFACCIÓN DE BRACKEN
+set.seed(100)
+count_matrix <- df[, -c(1,2)] #quito la de menor tamaño SL021
+rownames(count_matrix) <- make.unique(df$name)
+count_matrix_t <- t(count_matrix)
+min_count <- min(rowSums(count_matrix_t))
+rarefied_matrix <- rrarefy(count_matrix_t, sample = min_count)
+rarefied_matrix <- as.data.frame(rarefied_matrix)
+
+```
+#PCoA
+```{r}
+#De otro modo: Filtros adicionales
+#rarefied_matrix <- rarefied_matrix[, which(colSums(rarefied_matrix) > 30)]
+#rarefied_matrix <- rarefied_matrix[, apply(rarefied_matrix, 2, function(col) sum(col > 0) >= 10)]
+#Conveerrir a matriz numerica
+rarefied_matrix<-as.matrix(rarefied_matrix)
+log_rarefied_matrix<-log2(rarefied_matrix+1)
+#Encuentro distancia de Bray-Curtis
+dist<-vegdist(rarefied_matrix, method = "bray")
+dist<-vegdist(log_rarefied_matrix, method = "bray")
+
+# Realizo el PCoA con cmdscale actuando sobre una (dist_matrix), añadir correccion y obtener los eigen values
+pcoa <- cmdscale(dist, k = 2, eig = TRUE, add=TRUE)
+positions <- pcoa$points #extraigo los vectores
+colnames(positions) <- c("pcoa1", "pcoa2") #doy nombres a las coordinates
+positions<-positions[order(rownames(positions)), ] #ordeno por nombre de fila
+#hallo porcentaje explicado
+expl<-(pcoa$eig / sum(pcoa$eig))*100
+exp<-format(round(expl[1:2],digits=1),nsmall=1, trim=TRUE)
+labs<-c(glue("PCo 1 ({exp[1]}%)"),
+        glue("PCo 2 ({exp[2]}%)"))
+```
+#Getting metadata
+```{r}
+###METADATA
+metadata<-read.xlsx("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/pcoa/metadata.xlsx")
+##AÑADIR CARIES FREE SI CONSIDERO SL021
+status <- c("caries_active", "caries_active", "caries_active", "caries_active", 
+            "caries_active", "caries_active", "caries_free", "caries_free", "caries_free", 
+            "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
+            "caries_active", "caries_free", "caries_active")
+# Crear un data frame donde las filas son las muestras
+status_df <- data.frame(
+  samples = rownames(positions),  # Las muestras provienen de rownames de positions
+  status = status,                # El vector status
+  stringsAsFactors = FALSE
+)
+colnames(metadata)[1]<-'samples'
+metadata_dos<-inner_join(status_df, metadata, by='samples')
+metadata_dos <- metadata_dos %>% 
+  mutate(grado = if_else(samples %in% c("SL038", "SL068", "SL200"), "very_severe",
+                         if_else(status == "caries_active", "severe", "no_caries")))
+metadata_dos$edad_ni <- factor(gsub("[^0-9]", "", metadata_dos$edad_ni))
+
+
+```
+
+##PCoA of Microbial Species: Caries, Severe Caries, and Health
+```{r}
+
+
+# Convierto los resultados ordenados de PCoA a tibble y uno con df_variable
+# Gráfico PCoA con mejoras y etiquetas de muestras
+gg1<-positions %>%
+  as_tibble(rownames = "samples") %>%
+  left_join(metadata_dos, by = "samples") %>%
+  ggplot(aes(x = pcoa1, y = pcoa2, color = grado)) +
+  geom_point(size = 2.5, show.legend = TRUE)+
+  #geom_jitter(size = 2.5, stroke = 0.8,width = 0.005, height = 0.005) +  # Coloca geom_point sin size en aes()
+  geom_text_repel(aes(label = samples), size = 3, max.overlaps = 2, force=2)+#tras
+  # Agregar líneas punteadas en el origen (x=0, y=0)
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  
+  # Agregar elipses por cada grupo de "status"
+  stat_ellipse(aes(group = grado),
+               type = "norm",       # Puedes cambiar a "t" o "euclid" según tu preferencia
+               linetype = "solid",  # O "dashed", etc.
+               alpha = 0.5,         # Transparencia para la elipse
+               size = 0.8,
+               na.rm = TRUE  # Ignora grupos con menos puntos
+  ) +          # Grosor de línea de la elipse
+  
+    labs(x = labs[1], y = labs[2]) +  
+  theme_minimal(base_size = 16) +  
+  theme(
+    axis.title = element_text(size = 14, face = "bold"),  
+    axis.text = element_text(size = 14),  
+    legend.title = element_text(size = 14),  
+    legend.text = element_text(size = 12),  
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)  
+  ) +
+  scale_color_manual(
+    values = c("severe" = "#E41A1C", 
+               "very_severe" = "#984EA3", 
+               "no_caries" = "#377EB8"),
+    name = "Condition",
+    breaks = c("very_severe", "severe", "no_caries"),
+    labels = c("Severe caries", "Caries", "Health")
+  )+  
+  ggtitle("PCoA of Microbial Species: Caries, Severe Caries, and Health")
+#+ xlim(c(-0.105, -0.095))
+
+# set1_colors
+# [1] "#E41A1C" "#377EB8" "#4DAF4A" "#984EA3"
+# [5] "#FF7F00" "#FFFF33" "#A65628" "#F781BF"
+# [9] "#999999"
+
+ggsave("PCoA_species_3.png", plot = gg1, width = 8, height = 6, dpi = 300,bg="white")
+
+
+
+```
+##PCoA of Microbial Species: Caries vs. Health
+```{r}
+
+gg2<-positions %>%
+  as_tibble(rownames = "samples") %>%
+  left_join(metadata_dos, by = "samples") %>%
+  ggplot(aes(x = pcoa1, y = pcoa2, color = status)) +
+  geom_point(size = 2.5, show.legend = TRUE)+
+  #geom_jitter(size = 2.5, stroke = 0.8,width = 0.005, height = 0.005) +  # Coloca geom_point sin size en aes()
+  geom_text_repel(aes(label = samples), size = 3, max.overlaps = 2, force=2)+#tras
+  # Agregar líneas punteadas en el origen (x=0, y=0)
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  
+  # Agregar elipses por cada grupo de "status"
+  stat_ellipse(aes(group = status), 
+               type = "norm",       # Puedes cambiar a "t" o "euclid" según tu preferencia
+               linetype = "solid",  # O "dashed", etc.
+               alpha = 0.5,         # Transparencia para la elipse
+               size = 0.8) +          # Grosor de línea de la elipse
+  
+  labs(x = labs[1], y = labs[2]) +  
+  theme_minimal(base_size = 16) +  
+  theme(
+    axis.title = element_text(size = 14, face = "bold"),  
+    axis.text = element_text(size = 14),  
+    legend.title = element_text(size = 14),  
+    legend.text = element_text(size = 12),  
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5)  
+  ) +
+  scale_color_brewer(
+    palette = "Set1",
+    name = "Condition",                   # Título de la leyenda
+    breaks = c("caries_active",        # Valores originales en 'status'
+               "caries_free"),
+    labels = c("Caries", "Health")     # Nuevas etiquetas en la leyenda
+  )+  
+  ggtitle("PCoA of Microbial Species: Caries vs. Health")
+#+ xlim(c(-0.105, -0.095))
+
+ggsave("PCoA_species_2.png", plot = gg2, width = 8, height = 6, dpi = 300, bg="white")
+
+
+```
+#Correlation of species with PCo Axis
+```{r}
+# 1. Prepara data frames de posiciones y verifica el orden de las muestras
+positions_df <- as.data.frame(positions)
+positions_df$samples <- rownames(positions_df)
+
+# Ordenamos las filas de 'positions_df' y 'log_rarefied_matrix' según el nombre de muestra
+positions_df <- positions_df[order(positions_df$samples), ]
+log_rarefied_matrix <- log_rarefied_matrix[order(rownames(log_rarefied_matrix)), ]
+
+# Verificación de coincidencia de nombres
+if(!all(rownames(log_rarefied_matrix) == positions_df$samples)){
+  stop("Las muestras en log_rarefied_matrix y positions_df no coinciden en orden/nombres.")
+}
+
+# 2. Calcula la correlación especie vs. PCoA1 y PCoA2
+
+cor_list <- lapply(colnames(log_rarefied_matrix), function(sp){
+  # Abundancias (log) de la especie
+  abund_sp <- log_rarefied_matrix[, sp]
+  
+  # Correlación con pcoa1
+  cor_pcoa1 <- cor(abund_sp, positions_df$pcoa1, method = "kendall")
+  cor_pcoa1_test <- cor.test(abund_sp, positions_df$pcoa1, method = "kendall")
+  pval_pcoa1 <- cor_pcoa1_test$p.value
+  
+  # Correlación con pcoa2
+  cor_pcoa2 <- cor(abund_sp, positions_df$pcoa2, method = "spearman")
+  cor_pcoa2_test <- cor.test(abund_sp, positions_df$pcoa2, method = "spearman")
+  pval_pcoa2 <- cor_pcoa2_test$p.value
+  
+  data.frame(
+    species = sp,
+    cor_pcoa1 = cor_pcoa1,
+    pval_pcoa1 = pval_pcoa1,
+    cor_pcoa2 = cor_pcoa2,
+    pval_pcoa2 = pval_pcoa2
+  )
+})
+
+# 3. Unimos los resultados en un único data frame
+cor_results <- do.call(rbind, cor_list)
+# Para PCoA1
+cor_results_pcoa1 <- cor_results %>%
+  select(species, cor_pcoa1, pval_pcoa1) %>%
+  mutate(abs_cor_pcoa1 = abs(cor_pcoa1)) %>%
+  arrange(desc(abs_cor_pcoa1)) %>%
+  rename(
+    Spearman_Correlation = cor_pcoa1,
+    P_value              = pval_pcoa1,
+    Absolute_Correlation = abs_cor_pcoa1
+  )
+
+# Para PCoA2
+cor_results_pcoa2 <- cor_results %>%
+  select(species, cor_pcoa2, pval_pcoa2) %>%
+  mutate(abs_cor_pcoa2 = abs(cor_pcoa2)) %>%
+  arrange(desc(abs_cor_pcoa2)) %>%
+  rename(
+    Spearman_Correlation = cor_pcoa2,
+    P_value              = pval_pcoa2,
+    Absolute_Correlation = abs_cor_pcoa2
+  )
+
+cor_results_pcoa1_final <- cor_results_pcoa1 %>%
+  select(-Absolute_Correlation)  # se usa para mostrar/exportar
+
+cor_results_pcoa2_final <- cor_results_pcoa2 %>%
+  select(-Absolute_Correlation)
+
+pcoa1_html <- cor_results_pcoa1_final %>%
+  head(10) %>%
+    rename_with(~ gsub("_", " ", .x)) %>%  # Reemplazar "_" con espacio
+
+  kbl(
+    format  = "html",
+    caption = "Spearman correlation with PCoA1 (TOP 10)",
+    # Opcional: cambia aquí el ancho de columnas, alineación, etc.
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+pcoa2_html <- cor_results_pcoa2_final %>%
+  head(10) %>%
+    rename_with(~ gsub("_", " ", .x)) %>%  # Reemplazar "_" con espacio
+
+  kbl(
+    format  = "html",
+    caption = "Spearman correlation with PCoA2 (TOP 10)"
+  ) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+# Guardar las tablas HTML si así lo deseas
+save_kable(pcoa1_html, "pcoa1_top10.html")
+save_kable(pcoa2_html, "pcoa2_top10.html")
+
+###############################################################################
+# 4. Exportar las tablas COMPLETAS en CSV (sin la columna del abs. corr.)
+###############################################################################
+write.csv(cor_results_pcoa1_final, "pcoa1_full.csv", row.names = FALSE)
+write.csv(cor_results_pcoa2_final, "pcoa2_full.csv", row.names = FALSE)
+
+message("Proceso completado: se han generado las tablas HTML (TOP 10) y los CSV completos (sin abs. corr.).")
+```
+
+
+```{r}

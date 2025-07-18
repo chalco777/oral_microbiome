@@ -1,0 +1,411 @@
+sample	gene_name	start	end	drug_class	conteo
+SL021	APH(3'')-Ib	3.0	836.0	aminoglycoside antibiotic	28
+SL021	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	2.0	970.0	cephalosporin; cephamycin; penam	9
+SL021	TEM-1	575.0	1435.0	monobactam; cephalosporin; penam; penem	41
+SL021	patA	89.0	1345.0	fluoroquinolone antibiotic	73
+SL021	sul2	1141.0	1956.0	sulfonamide antibiotic	15
+SL021	tet(M)	1435.0	3354.0	tetracycline antibiotic	34
+SL021	vanW gene in vanG cluster	2.0	235.0	glycopeptide antibiotic	1
+SL021	vanW gene in vanI cluster	2.0	277.0	glycopeptide antibiotic	6
+SL021	vanY gene in vanA cluster	2.0	403.0	glycopeptide antibiotic	3
+SL021	vanY gene in vanB cluster	2.0	622.0	glycopeptide antibiotic	8
+SL021	vanY gene in vanM cluster	2.0	247.0	glycopeptide antibiotic	9
+SL021	__no_feature				283867
+SL021	__ambiguous				6
+SL021	__too_low_aQual				67884
+SL021	__not_aligned				126879
+SL021	__alignment_not_unique				0
+SL036	APH(3'')-Ib	2554.0	3357.0	aminoglycoside antibiotic	30
+SL036	CfxA3	5744.0	6709.0	cephamycin	46
+SL036	ErmX	190.0	987.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	7
+SL036	TEM-1	851.0	1711.0	monobactam; cephalosporin; penam; penem	35
+SL036	mdeA	3.0	935.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	262
+SL036	nimJ	691.0	1179.0	nitroimidazole antibiotic	14
+SL036	patA	121.0	1440.0	fluoroquinolone antibiotic	165
+SL036	qacG	3.0	293.0	disinfecting agents and antiseptics	8
+SL036	sul2	3418.0	4233.0	sulfonamide antibiotic	30
+SL036	tet(M)	3.0	1256.0	tetracycline antibiotic	67
+SL036	tet(Q)	421.0	936.0	tetracycline antibiotic	5
+SL036	vanT gene in vanG cluster	373.0	1476.0	glycopeptide antibiotic	355
+SL036	vanW gene in vanG cluster	2.0	340.0	glycopeptide antibiotic	15
+SL036	vanW gene in vanI cluster	3.0	251.0	glycopeptide antibiotic	224
+SL036	vanY gene in vanA cluster	48.0	422.0	glycopeptide antibiotic	0
+SL036	vanY gene in vanB cluster	3.0	305.0	glycopeptide antibiotic	23
+SL036	vanY gene in vanF cluster	9086.0	9853.0	glycopeptide antibiotic	23
+SL036	vanY gene in vanG cluster	1.0	246.0	glycopeptide antibiotic	33
+SL036	vanY gene in vanM cluster	1.0	246.0	glycopeptide antibiotic	121
+SL036	__no_feature				1199937
+SL036	__ambiguous				7
+SL036	__too_low_aQual				99246
+SL036	__not_aligned				160457
+SL036	__alignment_not_unique				0
+SL037	APH(3'')-Ib	3.0	836.0	aminoglycoside antibiotic	42
+SL037	APH(3')-Ia	99.0	914.0	aminoglycoside antibiotic	21
+SL037	CfxA2	547.0	1512.0	cephamycin	29
+SL037	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	3.0	1160.0	elfamycin antibiotic	149
+SL037	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	3629.0	5449.0	cephalosporin; cephamycin; penam	65
+SL037	TEM-1	148.0	1008.0	monobactam; cephalosporin; penam; penem	38
+SL037	mdeA	1514.0	2869.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	18
+SL037	patA	325.0	2031.0	fluoroquinolone antibiotic	262
+SL037	patB	1.0	1431.0	fluoroquinolone antibiotic	48
+SL037	qacG	119.0	448.0	disinfecting agents and antiseptics	21
+SL037	qacJ	3.0	323.0	disinfecting agents and antiseptics	2
+SL037	sul2	84.0	899.0	sulfonamide antibiotic	19
+SL037	tet(32)	79.0	1998.0	tetracycline antibiotic	28
+SL037	tet(M)	532.0	2451.0	tetracycline antibiotic	49
+SL037	tetR	93.0	716.0	tetracycline antibiotic	5
+SL037	vanT gene in vanG cluster	51.0	1016.0	glycopeptide antibiotic	26
+SL037	vanW gene in vanB cluster	1.0	243.0	glycopeptide antibiotic	0
+SL037	vanW gene in vanG cluster	3.0	224.0	glycopeptide antibiotic	8
+SL037	vanW gene in vanI cluster	143.0	361.0	glycopeptide antibiotic	40
+SL037	vanY gene in vanB cluster	112.0	420.0	glycopeptide antibiotic	35
+SL037	vanY gene in vanG cluster	1.0	294.0	glycopeptide antibiotic	16
+SL037	vanY gene in vanM cluster	2.0	253.0	glycopeptide antibiotic	51
+SL037	__no_feature				982702
+SL037	__ambiguous				18
+SL037	__too_low_aQual				126642
+SL037	__not_aligned				158401
+SL037	__alignment_not_unique				0
+SL038	patA	93.0	1799.0	fluoroquinolone antibiotic	90
+SL038	patB	2.0	1657.0	fluoroquinolone antibiotic	91
+SL038	qacG	89.0	292.0	disinfecting agents and antiseptics	8
+SL038	qacJ	2.0	220.0	disinfecting agents and antiseptics	0
+SL038	tet(M)	11955.0	13874.0	tetracycline antibiotic	72
+SL038	vanW gene in vanG cluster	14170.0	15006.0	glycopeptide antibiotic	38
+SL038	vanW gene in vanI cluster	2.0	256.0	glycopeptide antibiotic	7
+SL038	vanY gene in vanA cluster	1.0	222.0	glycopeptide antibiotic	1
+SL038	vanY gene in vanG cluster	2.0	622.0	glycopeptide antibiotic	4
+SL038	vanY gene in vanM cluster	1.0	243.0	glycopeptide antibiotic	38
+SL038	__no_feature				394417
+SL038	__ambiguous				32
+SL038	__too_low_aQual				68008
+SL038	__not_aligned				153861
+SL038	__alignment_not_unique				0
+SL048	APH(3'')-Ib	5921.0	6724.0	aminoglycoside antibiotic	42
+SL048	CfxA2	4.0	969.0	cephamycin	50
+SL048	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	21.0	1205.0	elfamycin antibiotic	55
+SL048	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	579.0	2399.0	cephalosporin; cephamycin; penam	42
+SL048	TEM-1	7567.0	8427.0	monobactam; cephalosporin; penam; penem	64
+SL048	mdeA	1.0	651.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	50
+SL048	nimA	161.0	649.0	nitroimidazole antibiotic	24
+SL048	nimI	80.0	583.0	nitroimidazole antibiotic	0
+SL048	nimJ	141.0	623.0	nitroimidazole antibiotic	23
+SL048	patA	2.0	1678.0	fluoroquinolone antibiotic	41
+SL048	qacG	2.0	277.0	disinfecting agents and antiseptics	19
+SL048	sul2	5045.0	5860.0	sulfonamide antibiotic	47
+SL048	tet(M)	3.0	539.0	tetracycline antibiotic	25
+SL048	tet(Q)	661.0	2634.0	tetracycline antibiotic	50
+SL048	vanT gene in vanG cluster	2.0	1030.0	glycopeptide antibiotic	192
+SL048	vanW gene in vanG cluster	2.0	262.0	glycopeptide antibiotic	5
+SL048	vanW gene in vanI cluster	1.0	216.0	glycopeptide antibiotic	90
+SL048	vanY gene in vanA cluster	3.0	263.0	glycopeptide antibiotic	1
+SL048	vanY gene in vanB cluster	264.0	578.0	glycopeptide antibiotic	22
+SL048	vanY gene in vanG cluster	2.0	256.0	glycopeptide antibiotic	25
+SL048	vanY gene in vanM cluster	1.0	246.0	glycopeptide antibiotic	128
+SL048	__no_feature				1048104
+SL048	__ambiguous				17
+SL048	__too_low_aQual				128933
+SL048	__not_aligned				190892
+SL048	__alignment_not_unique				0
+SL050	APH(3'')-Ib	3342.0	4145.0	aminoglycoside antibiotic	15
+SL050	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	3.0	1187.0	elfamycin antibiotic	84
+SL050	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	1514.0	3334.0	cephalosporin; cephamycin; penam	59
+SL050	TEM-1	83.0	943.0	monobactam; cephalosporin; penam; penem	25
+SL050	mdeA	2.0	382.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	21
+SL050	patA	3163.0	4905.0	fluoroquinolone antibiotic	154
+SL050	patB	4907.0	6478.0	fluoroquinolone antibiotic	123
+SL050	qacG	1294.0	1617.0	disinfecting agents and antiseptics	50
+SL050	sul2	2466.0	3281.0	sulfonamide antibiotic	18
+SL050	tet(M)	160.0	1548.0	tetracycline antibiotic	15
+SL050	vanT gene in vanG cluster	6292.0	7398.0	glycopeptide antibiotic	17
+SL050	vanW gene in vanI cluster	3.0	290.0	glycopeptide antibiotic	22
+SL050	vanY gene in vanA cluster	213.0	431.0	glycopeptide antibiotic	2
+SL050	vanY gene in vanB cluster	1175.0	1720.0	glycopeptide antibiotic	6
+SL050	vanY gene in vanG cluster	1.0	276.0	glycopeptide antibiotic	71
+SL050	vanY gene in vanM cluster	1.0	261.0	glycopeptide antibiotic	90
+SL050	__no_feature				587634
+SL050	__ambiguous				38
+SL050	__too_low_aQual				61161
+SL050	__not_aligned				109325
+SL050	__alignment_not_unique				0
+SL068	CfxA2	176.0	1141.0	cephamycin	17
+SL068	ErmB	722.0	1474.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	11
+SL068	ErmF	1.0	768.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	10
+SL068	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	382.0	1566.0	elfamycin antibiotic	41
+SL068	TEM-1	907.0	1767.0	monobactam; cephalosporin; penam; penem	18
+SL068	mdeA	5248.0	6603.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	60
+SL068	patA	2049.0	3791.0	fluoroquinolone antibiotic	35
+SL068	patB	505.0	2010.0	fluoroquinolone antibiotic	31
+SL068	qacG	311.0	571.0	disinfecting agents and antiseptics	15
+SL068	qacJ	3.0	260.0	disinfecting agents and antiseptics	1
+SL068	sul2	513.0	1328.0	sulfonamide antibiotic	16
+SL068	tet(M)	11907.0	13826.0	tetracycline antibiotic	30
+SL068	vanT gene in vanG cluster	654.0	1670.0	glycopeptide antibiotic	81
+SL068	vanW gene in vanI cluster	3.0	242.0	glycopeptide antibiotic	73
+SL068	vanY gene in vanA cluster	1.0	321.0	glycopeptide antibiotic	4
+SL068	vanY gene in vanB cluster	1.0	315.0	glycopeptide antibiotic	3
+SL068	vanY gene in vanF cluster	777.0	1322.0	glycopeptide antibiotic	7
+SL068	vanY gene in vanG cluster	3.0	320.0	glycopeptide antibiotic	1
+SL068	vanY gene in vanM cluster	3.0	347.0	glycopeptide antibiotic	5
+SL068	__no_feature				419430
+SL068	__ambiguous				3
+SL068	__too_low_aQual				54118
+SL068	__not_aligned				138964
+SL068	__alignment_not_unique				0
+SL085	APH(3'')-Ib	1851.0	2654.0	aminoglycoside antibiotic	20
+SL085	CfxA3	204.0	1169.0	cephamycin	22
+SL085	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	1149.0	2333.0	elfamycin antibiotic	46
+SL085	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	3.0	1961.0	cephalosporin; cephamycin; penam	27
+SL085	TEM-1	148.0	1008.0	monobactam; cephalosporin; penam; penem	36
+SL085	mdeA	263.0	679.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	4
+SL085	mtrA	22.0	864.0	macrolide antibiotic; penam	6
+SL085	pmrA	1.0	1203.0	fluoroquinolone antibiotic	45
+SL085	qacJ	1.0	276.0	disinfecting agents and antiseptics	9
+SL085	sul2	2715.0	3530.0	sulfonamide antibiotic	22
+SL085	tet(M)	2.0	886.0	tetracycline antibiotic	38
+SL085	vanT gene in vanG cluster	3.0	1313.0	glycopeptide antibiotic	29
+SL085	vanW gene in vanI cluster	2.0	310.0	glycopeptide antibiotic	11
+SL085	vanY gene in vanB cluster	2.0	280.0	glycopeptide antibiotic	7
+SL085	vanY gene in vanG cluster	2.0	250.0	glycopeptide antibiotic	5
+SL085	vanY gene in vanM cluster	2.0	253.0	glycopeptide antibiotic	94
+SL085	__no_feature				540629
+SL085	__ambiguous				10
+SL085	__too_low_aQual				84582
+SL085	__not_aligned				161345
+SL085	__alignment_not_unique				0
+SL086	APH(3'')-Ib	3.0	836.0	aminoglycoside antibiotic	61
+SL086	APH(3')-Ia	148.0	963.0	aminoglycoside antibiotic	26
+SL086	CfxA3	149.0	1114.0	cephamycin	11
+SL086	ErmB	576.0	1313.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	35
+SL086	ErmX	1538.0	2392.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	43
+SL086	TEM-1	153.0	1013.0	monobactam; cephalosporin; penam; penem	41
+SL086	nimA	516.0	1004.0	nitroimidazole antibiotic	8
+SL086	patA	259.0	1746.0	fluoroquinolone antibiotic	129
+SL086	patB	3.0	1598.0	fluoroquinolone antibiotic	25
+SL086	qacG	71.0	331.0	disinfecting agents and antiseptics	13
+SL086	qacJ	172.0	453.0	disinfecting agents and antiseptics	1
+SL086	sul2	1061.0	1876.0	sulfonamide antibiotic	39
+SL086	tet(M)	532.0	2451.0	tetracycline antibiotic	50
+SL086	vanT gene in vanG cluster	2.0	1003.0	glycopeptide antibiotic	46
+SL086	vanW gene in vanB cluster	2.0	268.0	glycopeptide antibiotic	1
+SL086	vanW gene in vanI cluster	1.0	264.0	glycopeptide antibiotic	29
+SL086	vanY gene in vanA cluster	3.0	278.0	glycopeptide antibiotic	0
+SL086	vanY gene in vanB cluster	2.0	289.0	glycopeptide antibiotic	2
+SL086	vanY gene in vanG cluster	1.0	384.0	glycopeptide antibiotic	17
+SL086	vanY gene in vanM cluster	2.0	247.0	glycopeptide antibiotic	51
+SL086	__no_feature				636072
+SL086	__ambiguous				8
+SL086	__too_low_aQual				61371
+SL086	__not_aligned				126005
+SL086	__alignment_not_unique				0
+SL088	APH(3'')-Ib	3.0	836.0	aminoglycoside antibiotic	54
+SL088	APH(3')-Ia	340.0	1155.0	aminoglycoside antibiotic	46
+SL088	CfxA3	52.0	1017.0	cephamycin	31
+SL088	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	424.0	1608.0	elfamycin antibiotic	137
+SL088	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	4158.0	5882.0	cephalosporin; cephamycin; penam	63
+SL088	TEM-1	148.0	1008.0	monobactam; cephalosporin; penam; penem	60
+SL088	mdeA	106817.0	108172.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	44
+SL088	patA	1591.0	3297.0	fluoroquinolone antibiotic	242
+SL088	patB	3.0	1589.0	fluoroquinolone antibiotic	253
+SL088	qacG	2.0	340.0	disinfecting agents and antiseptics	16
+SL088	sul2	84.0	899.0	sulfonamide antibiotic	75
+SL088	tet(M)	121.0	2025.0	tetracycline antibiotic	25
+SL088	vanH gene in vanF cluster	5402.0	6439.0	glycopeptide antibiotic	36
+SL088	vanH gene in vanP cluster	189.0	1181.0	glycopeptide antibiotic	29
+SL088	vanT gene in vanG cluster	55.0	1143.0	glycopeptide antibiotic	115
+SL088	vanW gene in vanG cluster	2.0	283.0	glycopeptide antibiotic	37
+SL088	vanW gene in vanI cluster	3.0	230.0	glycopeptide antibiotic	50
+SL088	vanY gene in vanA cluster	2.0	613.0	glycopeptide antibiotic	3
+SL088	vanY gene in vanB cluster	109.0	567.0	glycopeptide antibiotic	81
+SL088	vanY gene in vanG cluster	3.0	248.0	glycopeptide antibiotic	26
+SL088	vanY gene in vanM cluster	2.0	196.0	glycopeptide antibiotic	88
+SL088	__no_feature				957434
+SL088	__ambiguous				73
+SL088	__too_low_aQual				92894
+SL088	__not_aligned				103945
+SL088	__alignment_not_unique				0
+SL090	ANT(2'')-Ia	44.0	577.0	aminoglycoside antibiotic	7
+SL090	APH(3'')-Ib	1650.0	2453.0	aminoglycoside antibiotic	30
+SL090	APH(3')-IIIa	92.0	886.0	aminoglycoside antibiotic	26
+SL090	CfxA3	1425.0	2390.0	cephamycin	26
+SL090	ErmB	1590.0	2327.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	57
+SL090	ErmX	1749.0	2603.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	77
+SL090	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	3.0	1160.0	elfamycin antibiotic	71
+SL090	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	369.0	2189.0	cephalosporin; cephamycin; penam	81
+SL090	Klebsiella pneumoniae KpnH	81.0	1607.0	macrolide antibiotic; fluoroquinolone antibiotic; aminoglycoside antibiotic; carbapenem; cephalosporin; penam; peptide antibiotic; penem	56
+SL090	Neisseria gonorrhoeae gyrA conferring resistance to fluoroquinolones	192.0	2963.0	fluoroquinolone antibiotic	76
+SL090	TEM-1	148.0	990.0	monobactam; cephalosporin; penam; penem	31
+SL090	mdeA	2.0	457.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	107
+SL090	patA	2813.0	4555.0	fluoroquinolone antibiotic	71
+SL090	patB	367.0	2133.0	fluoroquinolone antibiotic	203
+SL090	qacG	1385.0	1708.0	disinfecting agents and antiseptics	45
+SL090	sul2	774.0	1589.0	sulfonamide antibiotic	18
+SL090	tet(M)	1.0	522.0	tetracycline antibiotic	134
+SL090	tet(W)	323.0	2245.0	tetracycline antibiotic	106
+SL090	vanH gene in vanO cluster	63.0	1061.0	glycopeptide antibiotic	14
+SL090	vanH gene in vanP cluster	315.0	1169.0	glycopeptide antibiotic	12
+SL090	vanT gene in vanG cluster	633.0	1736.0	glycopeptide antibiotic	146
+SL090	vanW gene in vanI cluster	1.0	1191.0	glycopeptide antibiotic	135
+SL090	vanY gene in vanA cluster	3.0	230.0	glycopeptide antibiotic	0
+SL090	vanY gene in vanB cluster	2.0	163.0	glycopeptide antibiotic	73
+SL090	vanY gene in vanG cluster	1.0	357.0	glycopeptide antibiotic	15
+SL090	vanY gene in vanM cluster	53.0	229.0	glycopeptide antibiotic	109
+SL090	__no_feature				1175462
+SL090	__ambiguous				39
+SL090	__too_low_aQual				113736
+SL090	__not_aligned				99944
+SL090	__alignment_not_unique				0
+SL103	APH(3'')-Ib	179.0	1012.0	aminoglycoside antibiotic	61
+SL103	APH(3')-Ia	29.0	844.0	aminoglycoside antibiotic	29
+SL103	CfxA3	673.0	1638.0	cephamycin	24
+SL103	ErmB	37389.0	38126.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	137
+SL103	ErmX	2255.0	3109.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	33
+SL103	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	217.0	1401.0	elfamycin antibiotic	65
+SL103	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	432.0	1451.0	cephalosporin; cephamycin; penam	12
+SL103	TEM-1	200.0	1060.0	monobactam; cephalosporin; penam; penem	97
+SL103	mdeA	150.0	596.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	24
+SL103	patA	3189.0	4829.0	fluoroquinolone antibiotic	407
+SL103	patB	1418.0	3217.0	fluoroquinolone antibiotic	318
+SL103	qacG	936.0	1265.0	disinfecting agents and antiseptics	34
+SL103	qacJ	1848.0	2141.0	disinfecting agents and antiseptics	9
+SL103	sul2	84.0	899.0	sulfonamide antibiotic	54
+SL103	tet(32)	1940.0	2503.0	tetracycline antibiotic	31
+SL103	tet(M)	25555.0	27474.0	tetracycline antibiotic	285
+SL103	vanH gene in vanO cluster	2.0	925.0	glycopeptide antibiotic	14
+SL103	vanT gene in vanG cluster	1.0	870.0	glycopeptide antibiotic	31
+SL103	vanW gene in vanG cluster	16941.0	17777.0	glycopeptide antibiotic	144
+SL103	vanW gene in vanI cluster	1.0	213.0	glycopeptide antibiotic	78
+SL103	vanY gene in vanA cluster	76.0	240.0	glycopeptide antibiotic	18
+SL103	vanY gene in vanB cluster	3.0	320.0	glycopeptide antibiotic	61
+SL103	vanY gene in vanG cluster	1.0	435.0	glycopeptide antibiotic	49
+SL103	vanY gene in vanM cluster	11.0	220.0	glycopeptide antibiotic	608
+SL103	__no_feature				1553733
+SL103	__ambiguous				75
+SL103	__too_low_aQual				148661
+SL103	__not_aligned				136591
+SL103	__alignment_not_unique				0
+SL111	patA	6332.0	8038.0	fluoroquinolone antibiotic	113
+SL111	patB	1.0	1380.0	fluoroquinolone antibiotic	181
+SL111	qacG	2019.0	2342.0	disinfecting agents and antiseptics	43
+SL111	tet(32)	2.0	538.0	tetracycline antibiotic	2
+SL111	tet(M)	2681.0	3481.0	tetracycline antibiotic	38
+SL111	tet(O)	1.0	474.0	tetracycline antibiotic	2
+SL111	vanT gene in vanG cluster	509.0	1612.0	glycopeptide antibiotic	67
+SL111	vanW gene in vanG cluster	3.0	278.0	glycopeptide antibiotic	8
+SL111	vanW gene in vanI cluster	2.0	418.0	glycopeptide antibiotic	33
+SL111	vanY gene in vanB cluster	2.0	286.0	glycopeptide antibiotic	25
+SL111	vanY gene in vanG cluster	2.0	502.0	glycopeptide antibiotic	105
+SL111	vanY gene in vanM cluster	3.0	209.0	glycopeptide antibiotic	272
+SL111	__no_feature				853326
+SL111	__ambiguous				30
+SL111	__too_low_aQual				79434
+SL111	__not_aligned				131006
+SL111	__alignment_not_unique				0
+SL112	APH(3'')-Ib	964.0	1767.0	aminoglycoside antibiotic	8
+SL112	APH(3')-Ia	2060.0	2875.0	aminoglycoside antibiotic	14
+SL112	APH(6)-Id	128.0	964.0	aminoglycoside antibiotic	13
+SL112	CfxA2	359.0	1324.0	cephamycin	21
+SL112	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	571.0	1740.0	cephalosporin; cephamycin; penam	136
+SL112	TEM-1	660.0	1520.0	monobactam; cephalosporin; penam; penem	20
+SL112	mdeA	1703.0	3058.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	37
+SL112	patA	1.0	1242.0	fluoroquinolone antibiotic	227
+SL112	patB	1155.0	2921.0	fluoroquinolone antibiotic	76
+SL112	pmrA	685.0	1884.0	fluoroquinolone antibiotic	51
+SL112	qacG	55.0	330.0	disinfecting agents and antiseptics	98
+SL112	sul2	1828.0	2643.0	sulfonamide antibiotic	13
+SL112	tet(32)	1.0	591.0	tetracycline antibiotic	11
+SL112	tet(M)	1.0	1248.0	tetracycline antibiotic	21
+SL112	vanT gene in vanG cluster	3127.0	4239.0	glycopeptide antibiotic	52
+SL112	vanW gene in vanG cluster	1.0	822.0	glycopeptide antibiotic	19
+SL112	vanW gene in vanI cluster	1.0	387.0	glycopeptide antibiotic	77
+SL112	vanY gene in vanA cluster	328.0	555.0	glycopeptide antibiotic	4
+SL112	vanY gene in vanB cluster	1.0	273.0	glycopeptide antibiotic	38
+SL112	vanY gene in vanG cluster	1.0	234.0	glycopeptide antibiotic	65
+SL112	vanY gene in vanM cluster	51.0	308.0	glycopeptide antibiotic	43
+SL112	__no_feature				1224035
+SL112	__ambiguous				26
+SL112	__too_low_aQual				98749
+SL112	__not_aligned				133838
+SL112	__alignment_not_unique				0
+SL114	CfxA3	158.0	1123.0	cephamycin	10
+SL114	ErmB	192.0	917.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	5
+SL114	ErmX	1.0	720.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	8
+SL114	TEM-1	1913.0	2773.0	monobactam; cephalosporin; penam; penem	11
+SL114	mdeA	388.0	840.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	3
+SL114	patB	36.0	1622.0	fluoroquinolone antibiotic	45
+SL114	qacG	2168.0	2497.0	disinfecting agents and antiseptics	7
+SL114	tet(32)	74.0	637.0	tetracycline antibiotic	2
+SL114	tet(M)	98.0	964.0	tetracycline antibiotic	15
+SL114	vanW gene in vanG cluster	3.0	290.0	glycopeptide antibiotic	1
+SL114	vanW gene in vanI cluster	3.0	209.0	glycopeptide antibiotic	30
+SL114	vanY gene in vanB cluster	1.0	555.0	glycopeptide antibiotic	38
+SL114	vanY gene in vanF cluster	3.0	146.0	glycopeptide antibiotic	0
+SL114	vanY gene in vanG cluster	1.0	297.0	glycopeptide antibiotic	5
+SL114	vanY gene in vanM cluster	1.0	219.0	glycopeptide antibiotic	16
+SL114	__no_feature				394378
+SL114	__ambiguous				1
+SL114	__too_low_aQual				60869
+SL114	__not_aligned				132912
+SL114	__alignment_not_unique				0
+SL118	APH(3'')-Ib	324.0	1127.0	aminoglycoside antibiotic	57
+SL118	APH(3')-Ia	969.0	1709.0	aminoglycoside antibiotic	14
+SL118	CfxA2	16.0	981.0	cephamycin	37
+SL118	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	129.0	1313.0	elfamycin antibiotic	92
+SL118	TEM-1	8098.0	8958.0	monobactam; cephalosporin; penam; penem	53
+SL118	patA	1537.0	3243.0	fluoroquinolone antibiotic	116
+SL118	patB	3.0	1535.0	fluoroquinolone antibiotic	78
+SL118	pmrA	783.0	1982.0	fluoroquinolone antibiotic	78
+SL118	qacG	2.0	331.0	disinfecting agents and antiseptics	5
+SL118	qacJ	2.0	235.0	disinfecting agents and antiseptics	0
+SL118	sul2	1188.0	2003.0	sulfonamide antibiotic	39
+SL118	tet(M)	1.0	432.0	tetracycline antibiotic	57
+SL118	vanH gene in vanP cluster	4598.0	5590.0	glycopeptide antibiotic	28
+SL118	vanW gene in vanG cluster	3.0	422.0	glycopeptide antibiotic	0
+SL118	vanY gene in vanA cluster	2.0	451.0	glycopeptide antibiotic	1
+SL118	vanY gene in vanB cluster	55.0	345.0	glycopeptide antibiotic	26
+SL118	vanY gene in vanG cluster	1619.0	2407.0	glycopeptide antibiotic	17
+SL118	vanY gene in vanM cluster	2.0	217.0	glycopeptide antibiotic	92
+SL118	__no_feature				970031
+SL118	__ambiguous				56
+SL118	__too_low_aQual				126029
+SL118	__not_aligned				180827
+SL118	__alignment_not_unique				0
+SL125	APH(3'')-Ib	179.0	982.0	aminoglycoside antibiotic	17
+SL125	CfxA2	216.0	1181.0	cephamycin	63
+SL125	Escherichia coli EF-Tu mutants conferring resistance to Pulvomycin	29.0	1213.0	elfamycin antibiotic	89
+SL125	Haemophilus influenzae PBP3 conferring resistance to beta-lactam antibiotics	3995.0	5815.0	cephalosporin; cephamycin; penam	37
+SL125	TEM-1	153.0	1013.0	monobactam; cephalosporin; penam; penem	29
+SL125	patA	2940.0	4682.0	fluoroquinolone antibiotic	97
+SL125	patB	4684.0	6450.0	fluoroquinolone antibiotic	142
+SL125	qacG	521.0	850.0	disinfecting agents and antiseptics	34
+SL125	tet(M)	8335.0	10254.0	tetracycline antibiotic	70
+SL125	vanH gene in vanP cluster	371.0	1363.0	glycopeptide antibiotic	19
+SL125	vanT gene in vanG cluster	8145.0	9257.0	glycopeptide antibiotic	64
+SL125	vanW gene in vanG cluster	774.0	1289.0	glycopeptide antibiotic	24
+SL125	vanW gene in vanI cluster	1.0	279.0	glycopeptide antibiotic	47
+SL125	vanY gene in vanA cluster	11.0	223.0	glycopeptide antibiotic	0
+SL125	vanY gene in vanB cluster	3.0	233.0	glycopeptide antibiotic	33
+SL125	vanY gene in vanG cluster	1.0	297.0	glycopeptide antibiotic	46
+SL125	vanY gene in vanM cluster	3.0	209.0	glycopeptide antibiotic	26
+SL125	__no_feature				688645
+SL125	__ambiguous				20
+SL125	__too_low_aQual				72504
+SL125	__not_aligned				127881
+SL125	__alignment_not_unique				0
+SL200	ErmB	565.0	1302.0	macrolide antibiotic; lincosamide antibiotic; streptogramin antibiotic; streptogramin A antibiotic; streptogramin B antibiotic	11
+SL200	Mycobacterium tuberculosis rpsL mutations conferring resistance to Streptomycin	1.0	372.0	aminoglycoside antibiotic	4
+SL200	mdeA	170.0	1525.0	fluoroquinolone antibiotic; aminoglycoside antibiotic; penam; tetracycline antibiotic; disinfecting agents and antiseptics	20
+SL200	nimA	691.0	1176.0	nitroimidazole antibiotic	12
+SL200	patA	900.0	2642.0	fluoroquinolone antibiotic	130
+SL200	patB	2.0	1468.0	fluoroquinolone antibiotic	38
+SL200	qacG	1.0	396.0	disinfecting agents and antiseptics	1
+SL200	tet(M)	703.0	1629.0	tetracycline antibiotic	25
+SL200	vanW gene in vanI cluster	2.0	235.0	glycopeptide antibiotic	23
+SL200	vanY gene in vanB cluster	1.0	471.0	glycopeptide antibiotic	17
+SL200	vanY gene in vanG cluster	1.0	267.0	glycopeptide antibiotic	18
+SL200	vanY gene in vanM cluster	1.0	195.0	glycopeptide antibiotic	36
+SL200	__no_feature				579865
+SL200	__ambiguous				12
+SL200	__too_low_aQual				75014
+SL200	__not_aligned				137827
+SL200	__alignment_not_unique				0
