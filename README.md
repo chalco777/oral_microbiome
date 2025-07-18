@@ -1,12 +1,11 @@
 # Oral Microbiome Metagenomic Analysis
 
-A pipeline for characterizing the oral microbial community via shotgun metagenomics:  
-- **Taxonomic profiling** (differential abundance, boxplots)  
-- **Beta‑diversity analyses** (PCoA)  
-- **Functional annotation** (AMR genes, mobile genetic elements)  
-- **Statistical modeling** (MaAsLin2, ANCOM-BC)
+A pipeline for characterizing the oral microbial community in health‑versus‑caries cohorts via shotgun metagenomics:
+- **Taxonomic profiling:** differential abundance identified with LEfSe and visualization  
+- **Beta diversity analysis:** Principal Coordinate Analysis (PCoA) reveals community‑level shifts.  
+- **Functional annotation:** detection of antibiotic‑resistance genes and mobile genetic elements.  
+- **Statistical modeling:** MaAsLin2 and ANCOM‑BC quantify differential resistomes between groups.  
 
----
 
 ## Prerequisites
 
