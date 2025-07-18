@@ -20,12 +20,13 @@ A pipeline for characterizing the oral microbial community via shotgun metagenom
 
 ## Repository structure
 
-├── barplot_boxplot/ # Rmd and PNGs for differential abundance
-├── lefse_pcoa/ # PCoA scripts and results
-├── rgi_ensamblajes/ # Functional annotation & MaAsLin2 outputs
-├── rgi_reads_heatmap/ # Raw counts and heatmap scripts
-├── *.docx # Drafts, methodology, final reports
-└── README.md # ← you are here
+```
+├── barplot_boxplot/          # Rmd and PNGs for differential abundance
+├── lefse_pcoa/              # PCoA scripts and results
+├── rgi_ensamblajes/         # Functional annotation & MaAsLin2 outputs
+├── rgi_reads_heatmap/       # Raw counts and heatmap scripts
+└── README.md                # ← you are here
+```
 
 ---
 
