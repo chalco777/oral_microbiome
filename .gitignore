@@ -1,8 +1,8 @@
 Borrado*
 INFORM*
 Methodology*
-*/*.png
-*/*.tsv
-*/*.csv
-*/*.txt
-*/*.html
+**/*.png
+**/*.tsv
+**/*.csv
+**/*.txt
+**/*.html
