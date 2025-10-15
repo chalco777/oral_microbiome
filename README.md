@@ -8,14 +8,7 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 * **Assembly & binning:** [nf-core/mag](https://nf-co.re/mag/3.3.0/) for contigs, bins, viral identification, and QC summaries.
 * **Resistome analysis:** RGI/HTSeq-count → RPKM normalization → MaAsLin2 & ANCOM-BC2 for differential ARGs.
 
-## Prerequisites
-
-- R (≥4.0) with packages: phyloseq, MaAsLin2, ANCOMBC, ggplot2, vegan  
-- Python 3 with: pandas, seaborn (for any custom scripts)  
-- Data:  
-  - `matrix_allranks_conteo.tsv`  
-  - `metadata.xlsx`
-
+> ⚠️ **IMPORTANT:** **Refer to each folder for the figures and the Markdown document with detailed descriptions** of the statistical analyses and the procedures implemented.
 
 ## Repository structure
 
@@ -28,6 +21,13 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 └── README.md                # ← you are here, keep reading!!
 ```
 
+## Prerequisites
+
+- R (≥4.0) with packages: phyloseq, MaAsLin2, ANCOMBC, ggplot2, vegan  
+- Python 3 with: pandas, seaborn (for any custom scripts)  
+- Data:  
+  - `matrix_allranks_conteo.tsv`  
+  - `metadata.xlsx`
 ---
 
 ## Recommended Analysis Sequence
