@@ -82,12 +82,12 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 ## Detailed Scripts Description
 
 ### 1. `barplot_boxplot/`
-- **Differential_taxonomic_analysis.Rmd**
+- **Differential_taxonomic_analysis.md**
   - **Role:** Performs differential taxonomic analysis of the oral microbiome by generating barplots and boxplots of relative abundances and raw counts (before and after rarefaction), identifying the top species associated with caries and health, and preparing input files for LEfSe analysis.
   - **Sequence:** Run the barplot section after generating taxonomic abundance tables with Kraken2-Bracken and Sylph, and the boxplot section on the differential species identified by Sylph.
 
 ### 2. `lefse_pcoa/`
-- **PCoA.Rmd**
+- **PCoA.md**
   - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes correlations between individual species and PCoA axes, outputting annotated plots and summary tables for interpretation.
   - **Sequence:** Run after generating the abundance matrix with the taxonomic profiling tools and have at hand the metadata. Use the resulting plots to interpret community structure and diversity patterns.
 - **pavian_to_lefse_preprocessing.R**
@@ -95,18 +95,18 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
   - **Sequence:** Run before LEfSe script in `software_scripts/lefse.nf`  if using Pavian outputs.
 
 ### 3. `rgi_assemblies/`
-- **assemblies_maaslin_ancom.Rmd**
+- **assemblies_maaslin_ancom.md**
   - **Role:** loads metagenomic ARG count data per assembler, normalizes it (RPKM/TPM), assigns sample statuses, performs differential abundance analysis by gene and drug class using Maaslin2 and ANCOM-BC, and generates heatmaps and boxplots to visualize the differences.
   - **Sequence:** Run after assembling metagenomes and generating count tables from scaffolds using RGI.
 
 ### 4. `rgi_reads_heatmap/`
-- **rgi.Rmd**
+- **rgi.md**
   - **Role:** Performs a comprehensive read-based ARG analysis by: importing raw read counts, annotating samples by caries status, normalizing gene counts using log transformation, TPM, TPKM, and RPKM methods, visualizing gene and drug class profiles with hierarchical clustering and k-means heatmaps, applying subsampling for read depth normalization, and conducting differential abundance testing with Maaslin2 for both gene and drug class levels.
   - **Sequence:** Run after mapping raw reads to CARD database using RGI. Use the heatmaps for interpretation of resistance gene distribution.
 
 ## Script Usage
 
-1. Open the appropriate R Markdown (`.Rmd`) in RStudio.  
+1. Open the Markdown (`.md`) appropriately in RStudio.  
 2. Knit to HTML or PDF to reproduce figures and tables.  
 3. Review output in each subfolder (e.g. `barplot_boxplot/`, `lefse_pcoa/`, etc.).  
 
