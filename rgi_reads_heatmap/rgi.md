@@ -4,20 +4,16 @@ output: html_document
 date: "2024-10-20"
 ---
 
+This script performs a complete read-based ARG analysis by: importing raw read counts, annotating samples by caries status, normalizing gene counts using log transformation, TPM, TPKM, and RPKM methods, visualizing gene and drug class profiles with hierarchical clustering and k-means heatmaps, applying subsampling for read depth normalization, and conducting differential abundance testing with Maaslin2 for both gene and drug class levels.
+
+## Setup and read count results from RGI preprocessing
+
 ```{r}
 library(tidyverse)
-```
-
-
-```{r}
 setwd("C:/Users/DAVID 21/OneDrive/Documentos/Mirkoslab/metmon/rgi_heatmap_boxplot")
 reads_raw<-read_tsv("raw_reads_count.tsv.txt")
-```
 
-
-
-```{r}
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3),as.numeric))
 
 status <- c("caries_free", "caries_active", "caries_active", "caries_active", "caries_active", 
@@ -25,7 +21,7 @@ status <- c("caries_free", "caries_active", "caries_active", "caries_active", "c
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -37,7 +33,7 @@ sample_status <- sample_status %>%
   ))
 reads <- reads %>%
   left_join(sample_status, by = "sample") %>% mutate(sample = paste(status, sample, sep = "_")) %>%
-  select(-status)  # Opcional: eliminar la columna `status` si ya no es necesaria
+  select(-status)  # Optional: remove the `status` column if it's no longer needed
 ```
 
 
@@ -53,8 +49,12 @@ reads_mat <- log1p(reads_mat)
 
 ```
 
+## By Individual genes
 
-En teoria de acá sigue normalizar. Entiendo que estoy normalizando no en base al total, sino en base a la media de cada gen en cada fila, para que se entienda el heatmap que saldrá
+In theory, normalization follows from here. I understand that I am normalizing not based on the total, but based on the mean of each gene in each row, so that the resulting heatmap is interpretable.
+
+### Hierarchical clustering and Heatmap
+
 ```{r}
 reads_scaled <- t(scale(t(reads_mat)))
 #reads_scaled<-reads_mat
@@ -67,45 +67,45 @@ hc_samples <- hclust(dis_samples, method = "average")
 library(pheatmap)
 library(RColorBrewer)
 
-# Crear el heatmap
+# Create the heatmap
 g<-pheatmap(reads_scaled,
          cluster_rows = hc_genes,
          cluster_cols = hc_samples,
-         show_rownames = TRUE,  # Ocultar nombres de genes si son muchos
+         show_rownames = TRUE,  # Hide gene names if there are too many
          fontsize_col = 8,
          color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-         main = "Heatmap de Número de reads contra cada gen vs Muestras (Clustering jerárquico)")
+         main = "Heatmap of Number of reads per gene vs Samples (Hierarchical clustering)")
 
 ```
 
+### Now apply k-means
 
-con k-means
 ```{r}
 
 reads_mat_sc <- t(scale(t(reads_mat)))
 mat_transposed <- t(reads_mat_sc)
 kmeans_result <- kmeans(mat_transposed, centers = 2)
-#obtener clusters
+#obtain clusters
 cluster_order <- order(kmeans_result$cluster)
-# Reordenar la matriz transpuesta según los clusters
+# Reorder the transposed matrix according to clusters
 mat_clustered <- mat_transposed[cluster_order, ]
-# Crear una anotación para los clusters (metadata de a qué cluster corresponde cada sample)
+# Create an annotation for the clusters (metadata of which cluster each sample belongs to)
 annotation_col <- data.frame(Cluster = factor(kmeans_result$cluster[cluster_order]))
 rownames(annotation_col) <- rownames(mat_clustered)
 
-# Crear el heatmap
+# Create the heatmap
 h<-pheatmap(mat_clustered,
          annotation_row = annotation_col,
-         show_colnames = TRUE,  # Ocultar nombres de genes si son muchos
+         show_colnames = TRUE,  # Hide gene names if there are too many
          fontsize_row = 8,
          color = colorRampPalette(brewer.pal(n = 9, name = "YlGnBu"))(100),
-         main = "Heatmap de Genes vs Muestras (Agrupadas por K-means)")
+         main = "Heatmap of Genes vs Samples (Grouped by K-means)")
 ```
 
-####APARTIR DE CATEGORIAS
+## By Gene Categories
 
 ```{r}
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
 
   mutate(across(c(3),as.numeric))
 
@@ -114,7 +114,7 @@ status <- c("caries_free", "caries_active", "caries_active", "caries_active", "c
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -126,13 +126,13 @@ sample_status <- sample_status %>%
   ))
 reads <- reads %>%
   left_join(sample_status, by = "sample") %>% mutate(sample = paste(status, sample, sep = "_")) %>%
-  select(-status)  # Opcional: eliminar la columna `status` si ya no es necesaria
+  select(-status)  # Optional: remove the `status` column if it's no longer needed
 reads_expanded <- reads %>%
   separate_rows(`Drug Class`, sep = ";") %>% group_by(sample,`Drug Class`) %>% summarise(count=sum(`All Mapped Reads`)) %>% 
   mutate(class=`Drug Class`) %>% 
   select(-`Drug Class`)
 
-# Versión nueva de tidyr
+# New version of tidyr
 wide <- reads_expanded %>%
   pivot_wider(names_from = sample, values_from = count, values_fill = list(count = 0))
 
@@ -143,7 +143,7 @@ rownames(reads_mat)<-wide$class
 reads_mat <- log1p(reads_mat)
 ```
 
-Cluster jerarquico
+### Hierarchical clustering
 ```{r}
 reads_scaled <- t(scale(t(reads_mat)))
 #reads_scaled<-reads_mat
@@ -156,59 +156,59 @@ hc_samples <- hclust(dis_samples, method = "average")
 library(pheatmap)
 library(RColorBrewer)
 
-# Crear el heatmap
+# Create the heatmap
 g<-pheatmap(reads_scaled,
          cluster_rows = hc_genes,
          cluster_cols = hc_samples,
-         show_rownames = TRUE,  # Ocultar nombres de genes si   # Ajusta el tamaño de las filas (genes)
-  fontsize_col = 8, fontsize_row = 6, # Ajusta el tamaño de las columnas (muestras o antibióticos)
+         show_rownames = TRUE,  # Hide gene names if there are too many
+  fontsize_col = 8, fontsize_row = 6, # Adjust row (genes) and column (samples or antibiotics) font size
   angle_col = 45,
          
          color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-         main = "Heatmap de Categoria vs Muestras (Clustering jerárquico)")
+         main = "Heatmap of Category vs Samples (Hierarchical clustering)")
 
 ```
 
-con k-means
+### k-means
 ```{r}
 
-# Escalar las filas restantes
+# Scale the remaining rows
 reads_mat_scaled <- t(scale(t(reads_mat)))
 
 
-# Continuar con el análisis
+# Continue with the analysis
 mat_transposed <- t(reads_mat_scaled)
 kmeans_result <- kmeans(mat_transposed, centers = 2)
-#obtener clusters
+#obtain clusters
 cluster_order <- order(kmeans_result$cluster)
-# Reordenar la matriz transpuesta según los clusters
+# Reorder the transposed matrix according to clusters
 mat_clustered <- mat_transposed[cluster_order, ]
-# Crear una anotación para los clusters (metadata de a qué cluster corresponde cada sample)
+# Create an annotation for the clusters (metadata of which cluster each sample belongs to)
 annotation_col <- data.frame(Cluster = factor(kmeans_result$cluster[cluster_order]))
 rownames(annotation_col) <- rownames(mat_clustered)
 
-# Crear el heatmap
+# Create the heatmap
 h <- pheatmap(
   mat_clustered,
   annotation_row = annotation_col,
-  show_colnames = TRUE,  # Mostrar nombres de columnas
-  fontsize_row = 8,  # Ajusta el tamaño de las filas (genes)
-  fontsize_col = 8,  # Ajusta el tamaño de las columnas (muestras o antibióticos)
-  angle_col = 45,    # Inclina las etiquetas de las columnas a 45 grados
+  show_colnames = TRUE,  # Show column names
+  fontsize_row = 8,  # Adjust row (genes) font size
+  fontsize_col = 8,  # Adjust column (samples or antibiotics) font size
+  angle_col = 45,    # Tilt column labels to 45 degrees
   color = colorRampPalette(brewer.pal(n = 9, name = "YlGnBu"))(100),
-  main = "Heatmap de Categorías vs Muestras (Agrupadas por K-means)"
+  main = "Heatmap of Categories vs Samples (Grouped by K-means)"
 )
 ```
 
-Categorias normalizando por TPKM y luego log1p, resultado para clustering y k-means directo
+Categories normalizing by TPKM and then log1p, result for clustering and k-means directly
 
 ```{r}
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3,5),as.numeric))
 reads_norm<-reads %>% group_by(sample) %>%
-  mutate(RPK = `All Mapped Reads` / (`Reference Length`*1000),     # Paso 2: Calcular lecturas por longitud
-         scaling_factor = sum(RPK) / 1e6,  # Sumar RPK y escalar a millones
-         TPM = RPK / scaling_factor) %>%   # Paso 3: Calcular TPM
+  mutate(RPK = `All Mapped Reads` / (`Reference Length`*1000),     # Step 2: Calculate reads per length
+         scaling_factor = sum(RPK) / 1e6,  # Sum RPK and scale to millions
+         TPM = RPK / scaling_factor) %>%   # Step 3: Calculate TPM
   ungroup() %>% select(c(1,2,4,8))
 
 
@@ -217,7 +217,7 @@ status <- c("caries_free", "caries_active", "caries_active", "caries_active", "c
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -227,13 +227,13 @@ sample_status <- sample_status %>%
     status == "caries_active" ~ "Caries",
     TRUE ~ status
   ))
-##AÑADIR SAMPLE_STATUS A READS NORML
+##ADD SAMPLE_STATUS TO READS_NORM
 reads_expanded <- reads_norm %>%
   separate_rows(`Drug Class`, sep = ";") %>% group_by(sample,`Drug Class`) %>% summarise(count=sum(tpk)) %>% 
   mutate(class=`Drug Class`) %>% 
   select(-`Drug Class`)
 
-# Versión nueva de tidyr
+# New version of tidyr
 wide <- reads_expanded %>%
   pivot_wider(names_from = sample, values_from = count, values_fill = list(count = 0))
 
@@ -245,9 +245,12 @@ reads_mat <- log1p(reads_mat)
 
 ```
 
-Por gen TPKM
+## By Individual genes 
+
+TPKM
+
 ```{r}
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3,5),as.numeric))
 reads_norm<-reads %>% mutate(rpk = `All Mapped Reads` / `Reference Length`*1000) %>% mutate(tpk=rpk/sum(rpk)*1000000) %>% select(c(1,2,7))
 
@@ -256,7 +259,7 @@ status <- c("caries_free", "caries_active", "caries_active", "caries_active", "c
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -268,7 +271,7 @@ sample_status <- sample_status %>%
   ))
 reads <- reads_norm %>%
   left_join(sample_status, by = "sample") %>% mutate(sample = paste(status, sample, sep = "_")) %>%
-  select(-status)  # Opcional: eliminar la columna `status` si ya no es necesaria
+  select(-status)  # Optional: remove the `status` column if it's no longer needed
 
 wide<-reads %>% 
   pivot_wider(names_from = sample, values_from = tpk, values_fill = list(tpk=0))
@@ -279,23 +282,22 @@ rownames(reads_mat)<-wide$gene
 
 reads_mat <- log1p(reads_mat)
 ```
-#PARTE III
-Subsampling de tabla
+## Subsampling of table
 ```{r}
 library(readr)
 library(vegan)
 
-lib<-read_table("reads_per_sample.tsv",   # Delimitador espacio
+lib<-read_table("reads_per_sample.tsv",   # Space delimiter
                   col_names = c("Size", "Sample"))
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3,5),as.numeric))
 
 lib_processed <- lib %>%
-  mutate(sample = str_extract(Sample, "^SL\\d+")) %>%  # Extrae 'SL' seguido de números
+  mutate(sample = str_extract(Sample, "^SL\\d+")) %>%  # Extract 'SL' followed by numbers
   group_by(sample) %>% 
   summarise(final=sum(Size))%>% filter(final >= 520000)
 samples_to_keep <- lib_processed$sample
-# Filtrar el dataframe 'reads' para incluir solo las muestras seleccionadas
+# Filter the 'reads' dataframe to include only the selected samples
 reads_filtered <- reads %>%
   filter(sample %in% samples_to_keep)
 #reads_expanded <- reads_filtered %>%
@@ -305,26 +307,26 @@ reads_summarized <- reads_filtered %>%
   group_by(sample, gene) %>%
   summarise(total_reads = sum(`All Mapped Reads`), .groups = 'drop')
 
-# Convertir los datos en una matriz con muestras como filas y clases de antibióticos como columnas
+# Convert the data into a matrix with samples as rows and antibiotic classes as columns
 reads_matrix <- reads_summarized %>%
   pivot_wider(names_from = gene, values_from = total_reads, values_fill = 0)
 
-# Convertir 'sample' en nombres de fila
+# Convert 'sample' into row names
 reads_counts <- reads_matrix %>%
   column_to_rownames(var = "sample")
-# Calcular el total de reads por muestra
+# Calculate the total reads per sample
 total_counts_per_sample <- rowSums(reads_counts)
 
-# Encontrar el mínimo total de reads entre las muestras
+# Find the minimum total reads among the samples
 min_counts <- min(total_counts_per_sample)
 
-# Encontrar el mínimo total de reads entre las muestras
+# Find the minimum total reads among the samples
 rarefied_counts <- rrarefy(reads_counts, sample = min_counts)
 
 rarefied_df <- as.data.frame(rarefied_counts) %>%
   rownames_to_column(var = "sample")
 
-# Convertir a formato largo
+# Convert to long format
 rarefied_long <- rarefied_df %>%
   pivot_longer(
     cols = -sample,
@@ -337,7 +339,7 @@ reads_with_rarefied <- reads %>%
   filter(sample %in% samples_to_keep)
 ```
 
-Siguiente paso tras subsampling
+Next step after subsampling
 
 ```{r}
 reads_norm<-reads_with_rarefied %>% mutate(rpk = `rarefied_counts` / `Reference Length`*1000) %>% mutate(tpk=rpk/sum(rpk)*1000000) %>% select(c(1,2,4,8))
@@ -348,7 +350,7 @@ status <- c("caries_active", "caries_active", "caries_active", "caries_active",
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads_with_rarefied$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -360,13 +362,13 @@ sample_status <- sample_status %>%
   ))
 reads <- reads_norm %>%
   left_join(sample_status, by = "sample") %>% mutate(sample = paste(status, sample, sep = "_")) %>%
-  select(-status)  # Opcional: eliminar la columna `status` si ya no es necesaria
+  select(-status)  # Optional: remove the `status` column if it's no longer needed
 reads_expanded <- reads %>%
   separate_rows(`Drug Class`, sep = ";") %>% group_by(sample,`Drug Class`) %>% summarise(count=sum(tpk)) %>% 
   mutate(class=`Drug Class`) %>% 
   select(-`Drug Class`)
 
-# Versión nueva de tidyr
+# New version of tidyr
 wide <- reads_expanded %>%
   pivot_wider(names_from = sample, values_from = count, values_fill = list(count = 0))
 
@@ -378,22 +380,22 @@ reads_mat <- log1p(reads_mat)
 ```
 
 
-#PARTE IV: HACER RPKM (COMO HIZO EL PAPER DEL LUIS)
+## Transform to RPKM (AS IN LUIS' PAPER)
 ```{r}
 library(readr)
 library(vegan)
 
 
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3,5),as.numeric))
-lib<-read_table("reads_per_sample.tsv",   # Delimitador espacio
+lib<-read_table("reads_per_sample.tsv",   # Space delimiter
                   col_names = c("Sample", "Size"))
 lib_processed <- lib %>%
-  mutate(sample = str_extract(Sample, "^SL\\d+")) %>%  # Extrae 'SL' seguido de números
+  mutate(sample = str_extract(Sample, "^SL\\d+")) %>%  # Extract 'SL' followed by numbers
   group_by(sample) %>% 
   summarise(final=sum(Size)) %>% mutate(final=final/4) %>% inner_join(reads, by="sample")%>%  rename(read_count = `All Mapped Reads`) %>% rename(gene_length=`Reference Length` ) %>% 
   rename(drug_class=`Drug Class` )
-#entre cuatro porq habia usado wc -l para obtene el mnumero de lineas
+# divided by four because I had used wc -l to get the number of lines
 
 ###RPKM
 reads_rpkm<-lib_processed %>% mutate(fraction=read_count/(final/1000000)) %>% 
@@ -404,7 +406,7 @@ status <- c("caries_free","caries_active", "caries_active", "caries_active", "ca
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -418,7 +420,7 @@ reads <- reads_rpkm %>%
   left_join(sample_status, by = "sample") %>% mutate(sample = paste(status, sample, sep = "_")) %>%
   select(-status)
 
-# ###POR CLASE DE DROGA
+# ###BY DRUG CLASS
 reads_expanded <- reads %>%
   separate_rows(drug_class, sep = ";") %>% group_by(sample,drug_class ) %>% summarise(count=sum(rpkm)) %>%
   mutate(class=drug_class) %>%
@@ -428,7 +430,7 @@ wide<-reads_expanded %>%
    pivot_wider(names_from = sample, values_from = count, values_fill = list(count=0))
 reads_mat<-as.matrix(wide[,-c(1)])
 rownames(reads_mat)<-wide$class
-###POR GEN
+###BY GENE
 # wide<-reads %>% 
 #   pivot_wider(names_from = sample, values_from = rpkm, values_fill = list(rpkm=0))
 # wide<-wide %>% filter(startsWith(gene, "tet"))
@@ -439,15 +441,15 @@ reads_mat <- log1p(reads_mat)
 
 ```
 
-#PARTE V:
-TPM PARA MAASLIN2
+## Differential ARG analysis
+### TPM FOR MAASLIN2
 ```{r}
-reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 es el gene
+reads<-reads_raw %>% separate(col=`SAMPLE ARO Term`, into = c("sample","gene"),sep =" ", extra="merge") %>% select(c(1,2,24,26,"All Mapped Reads")) %>% #26 drug class, 2 is the gene
   mutate(across(c(3,5),as.numeric))
 reads_norm<-reads %>% group_by(sample) %>%
-  mutate(RPK = `All Mapped Reads` / (`Reference Length`*1000),     # Paso 2: Calcular lecturas por longitud
-         scaling_factor = sum(RPK) / 1e6,  # Sumar RPK y escalar a millones
-         TPM = RPK / scaling_factor) %>%   # Paso 3: Calcular TPM
+  mutate(RPK = `All Mapped Reads` / (`Reference Length`*1000),     # Step 2: Calculate reads per length
+         scaling_factor = sum(RPK) / 1e6,  # Sum RPK and scale to millions
+         TPM = RPK / scaling_factor) %>%   # Step 3: Calculate TPM
   ungroup() %>% select(c(1,2,4,8))
 
 
@@ -456,7 +458,7 @@ status <- c("caries_free", "caries_active", "caries_active", "caries_active", "c
             "caries_free", "caries_free", "caries_active", "caries_free", "caries_free", 
             "caries_active", "caries_free", "caries_active")
 
-# Reemplazar "free" por "health"
+# Replace "free" with "health"
 status <- gsub("free", "health", status)
 unique_samples <- unique(reads$sample)
 sample_status <- data.frame(sample = unique_samples, status = status)
@@ -466,44 +468,44 @@ sample_status <- sample_status %>%
     status == "caries_active" ~ "Caries",
     TRUE ~ status
   ))
-# Asignar los nombres de las filas de `sample_status` a partir de la columna `sample`
+# Assign the row names of `sample_status` from the `sample` column
 rownames(sample_status) <- sample_status$sample
-# Eliminar la columna 'sample' ya que ahora está en los nombres de fila
+# Remove the 'sample' column since it's now in the row names
 sample_status$sample <- NULL
 
 
-####APARTIR DE READS
+####FROM READS
 wide_genes<-reads_norm %>% select(-`Drug Class`) %>% 
   pivot_wider(names_from = sample, values_from = TPM, values_fill = list(TPM=0))
-df_genes <- as.data.frame(t(wide_genes[,-1])) # Transponer excluyendo la columna de nombres de genes
-colnames(df_genes) <- wide_genes$gene    # Asignar nombres de genes como nombres de columnas
-           # Eliminar los nombres de filas
+df_genes <- as.data.frame(t(wide_genes[,-1])) # Transpose excluding the gene name column
+colnames(df_genes) <- wide_genes$gene    # Assign gene names as column names
+           # Remove row names
 colnames(df_genes) <- gsub(" ", "_", colnames(df_genes))
 
-####APARTIR DE CATEGORIAS
+####FROM CATEGORIES
 reads_class <- reads_norm %>%
   separate_rows(`Drug Class`, sep = ";") %>% 
 mutate(`Drug Class`= str_trim(`Drug Class`))%>% group_by(sample,`Drug Class`) %>% summarise(count=sum(TPM)) %>% 
   mutate(class=`Drug Class`) %>% 
   select(-`Drug Class`)
 
-# Versión nueva de tidyr
+# New version of tidyr
 wide_class <- reads_class %>%
   pivot_wider(names_from = sample, values_from = count, values_fill = list(count = 0))
 
-df_class <- as.data.frame(t(wide_class[,-1])) # Transponer excluyendo la columna de nombres de genes
-colnames(df_class) <- wide_class$class    # Asignar nombres de genes como nombres de columnas
-           # Eliminar los nombres de filas
+df_class <- as.data.frame(t(wide_class[,-1])) # Transpose excluding the gene name column
+colnames(df_class) <- wide_class$class    # Assign gene names as column names
+           # Remove row names
 colnames(df_class) <- gsub(" ", "_", colnames(df_class))
 
 
 ```
-CORRER MAASLIN2
+### RUN MAASLIN2
 ```{r}
 library(Maaslin2)
 fit_data=Maaslin2(input_data = df_genes,
                   input_metadata = sample_status,
-                      output = "Maaslin2_rawreads_genes_tpm",       # Carpeta de salida para los resultados
+                      output = "Maaslin2_rawreads_genes_tpm",       # Output folder for results
                   fixed_effects = c("status"), 
                   min_prevalence = 0.2,
                   normalization="TSS",
@@ -512,7 +514,7 @@ fit_data=Maaslin2(input_data = df_genes,
 library(Maaslin2)
 fit_data=Maaslin2(input_data = df_class,
                   input_metadata = sample_status,
-                      output = "Maaslin2_rawreads_class_tpm",       # Carpeta de salida para los resultados
+                      output = "Maaslin2_rawreads_class_tpm",       # Output folder for results
                   fixed_effects = c("status"), 
                   min_prevalence = 0.2,
                   normalization="TSS",
@@ -521,4 +523,4 @@ fit_data=Maaslin2(input_data = df_class,
 ```
 
 
-
+ 
