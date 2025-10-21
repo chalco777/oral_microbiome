@@ -25,10 +25,6 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 
 - R (≥4.0) with packages: phyloseq, MaAsLin2, ANCOMBC, ggplot2, vegan  
 - Python 3 with: pandas, seaborn (for any custom scripts)  
-- Data:  
-  - `matrix_allranks_conteo.tsv`  
-  - `metadata.xlsx`
----
 
 ## Recommended Analysis Sequence
 
