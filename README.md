@@ -89,21 +89,30 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 - **PCoA.md**
   - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes [`correlations between individual species and PCoA axes`](https://chalco777.github.io/oral_microbiome/lefse_pcoa/pcoa1_top10.html), outputting annotated plots and summary tables for interpretation.
   - **Sequence:** Run after generating the abundance matrix with the taxonomic profiling tools and have at hand the metadata. Use the resulting plots to interpret community structure and diversity patterns.
+
+  ![g6](lefse_pcoa/PCoA_species_2.png)
+
+
 - **pavian_to_lefse_preprocessing.R**
   - **Role:** Preprocesses data for LEfSe analysis, converting outputs from Pavian into the required format.
   - **Sequence:** Run before LEfSe script in `software_scripts/lefse.nf`  if using Pavian outputs.
 
-  ![g6](lefse_pcoa/PCoA_species_2.png)
 
 ### 3. `rgi_assemblies/`
 - **assemblies_maaslin_ancom.md**
   - **Role:** loads metagenomic ARG count data per assembler, normalizes it (RPKM/TPM), assigns sample statuses, performs differential abundance analysis by gene and drug class using Maaslin2 and ANCOM-BC, and generates heatmaps and boxplots to visualize the differences.
   - **Sequence:** Run after assembling metagenomes and generating count tables from scaffolds using RGI.
 
+ ![g9](rgi_assemblies/ancombc_rpkm/megahitg_classes_cephamycin_rpkm.png) 
+ ![g10](rgi_assemblies/ancombc_rpkm/megahit_classes_rpkm.png)
+
+
 ### 4. `rgi_reads_heatmap/`
 - **rgi.md**
   - **Role:** Performs a comprehensive read-based ARG analysis by: importing raw read counts, annotating samples by caries status, normalizing gene counts using log transformation, TPM, TPKM, and RPKM methods, visualizing gene and drug class profiles with hierarchical clustering and k-means heatmaps, applying subsampling for read depth normalization, and conducting differential abundance testing with Maaslin2 for both gene and drug class levels.
   - **Sequence:** Run after mapping raw reads to CARD database using RGI. Use the heatmaps for interpretation of resistance gene distribution.
+
+  ![g12](rgi_reads_heatmap/heatmap_oxa_genes.png)
 
 ## Script Usage
 
