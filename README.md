@@ -87,7 +87,7 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 
 ### 2. `lefse_pcoa/`
 - **PCoA.md**
-  - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes [correlations between individual species and PCoA axes](), outputting annotated plots and summary tables for interpretation.
+  - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes [`correlations between individual species and PCoA axes`](https://chalco777.github.io/oral_microbiome/lefse_pcoa/pcoa1_top10.html), outputting annotated plots and summary tables for interpretation.
   - **Sequence:** Run after generating the abundance matrix with the taxonomic profiling tools and have at hand the metadata. Use the resulting plots to interpret community structure and diversity patterns.
 - **pavian_to_lefse_preprocessing.R**
   - **Role:** Preprocesses data for LEfSe analysis, converting outputs from Pavian into the required format.
