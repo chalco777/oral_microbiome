@@ -97,6 +97,13 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
   - **Role:** Preprocesses data for LEfSe analysis, converting outputs from Pavian into the required format.
   - **Sequence:** Run before LEfSe script in `software_scripts/lefse.nf`  if using Pavian outputs.
 
+### 4. `rgi_reads_heatmap/`
+- **rgi.md**
+  - **Role:** Performs a comprehensive read-based ARG analysis by: importing raw read counts, annotating samples by caries status, normalizing gene counts using log transformation, TPM, TPKM, and RPKM methods, visualizing gene and drug class profiles with hierarchical clustering and k-means heatmaps, applying subsampling for read depth normalization, and conducting differential abundance testing with Maaslin2 for both gene and drug class levels.
+  - **Sequence:** Run after mapping raw reads to CARD database using RGI. Use the heatmaps for interpretation of resistance gene distribution.
+
+  ![g13](rgi_reads_heatmap/heatmap_classes_k_means.png)
+  ![g12](rgi_reads_heatmap/heatmap_oxa_genes.png)
 
 ### 3. `rgi_assemblies/`
 - **assemblies_maaslin_ancom.md**
@@ -105,14 +112,6 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 
  ![g9](rgi_assemblies/ancombc_rpkm/megahitg_classes_cephamycin_rpkm.png) 
  ![g10](rgi_assemblies/ancombc_rpkm/megahit_classes_rpkm.png)
-
-
-### 4. `rgi_reads_heatmap/`
-- **rgi.md**
-  - **Role:** Performs a comprehensive read-based ARG analysis by: importing raw read counts, annotating samples by caries status, normalizing gene counts using log transformation, TPM, TPKM, and RPKM methods, visualizing gene and drug class profiles with hierarchical clustering and k-means heatmaps, applying subsampling for read depth normalization, and conducting differential abundance testing with Maaslin2 for both gene and drug class levels.
-  - **Sequence:** Run after mapping raw reads to CARD database using RGI. Use the heatmaps for interpretation of resistance gene distribution.
-
-  ![g12](rgi_reads_heatmap/heatmap_oxa_genes.png)
 
 ## Script Usage
 
