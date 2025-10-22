@@ -8,7 +8,7 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 * **Assembly & binning:** [nf-core/mag](https://nf-co.re/mag/3.3.0/) for contigs, bins, viral identification, and QC summaries.
 * **Resistome analysis:** RGI/HTSeq-count → RPKM normalization → MaAsLin2 & ANCOM-BC2 for differential ARGs.
 
-> ⚠️ **IMPORTANT:** **Refer to each folder for the figures and the Markdown document with detailed descriptions** of the statistical analyses and the procedures implemented.
+> ⚠️ **IMPORTANT:** **Refer to each folder for all the figures and the Markdown document with detailed descriptions of the statistical analyses and the procedures implemented**.
 
 ## Repository structure
 
@@ -87,7 +87,7 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 
 ### 2. `lefse_pcoa/`
 - **PCoA.md**
-  - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes correlations between individual species and PCoA axes, outputting annotated plots and summary tables for interpretation.
+  - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes [correlations between individual species and PCoA axes](), outputting annotated plots and summary tables for interpretation.
   - **Sequence:** Run after generating the abundance matrix with the taxonomic profiling tools and have at hand the metadata. Use the resulting plots to interpret community structure and diversity patterns.
 - **pavian_to_lefse_preprocessing.R**
   - **Role:** Preprocesses data for LEfSe analysis, converting outputs from Pavian into the required format.
