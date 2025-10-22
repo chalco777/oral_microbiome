@@ -74,7 +74,7 @@ g<-pheatmap(reads_scaled,
          show_rownames = TRUE,  # Hide gene names if there are too many
          fontsize_col = 8,
          color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-         main = "Heatmap of Number of reads per gene vs Samples (Hierarchical clustering)")
+         main = "Heatmap of log1p(RPKM) per tetracycline genes across samples (hierarchical clustering)")
 
 ```
 
@@ -99,7 +99,7 @@ h<-pheatmap(mat_clustered,
          show_colnames = TRUE,  # Hide gene names if there are too many
          fontsize_row = 8,
          color = colorRampPalette(brewer.pal(n = 9, name = "YlGnBu"))(100),
-         main = "Heatmap of Genes vs Samples (Grouped by K-means)")
+         main = "Heatmap of log1p(RPKM) per OXA genes across samples (k-means)")
 ```
 
 ## By Gene Categories
@@ -165,7 +165,7 @@ g<-pheatmap(reads_scaled,
   angle_col = 45,
          
          color = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(100),
-         main = "Heatmap of Category vs Samples (Hierarchical clustering)")
+         main = "Heatmap of log1p(RPKM) by ARG class across samples (hierarchical clustering)")
 
 ```
 
@@ -196,10 +196,11 @@ h <- pheatmap(
   fontsize_col = 8,  # Adjust column (samples or antibiotics) font size
   angle_col = 45,    # Tilt column labels to 45 degrees
   color = colorRampPalette(brewer.pal(n = 9, name = "YlGnBu"))(100),
-  main = "Heatmap of Categories vs Samples (Grouped by K-means)"
+  main = "Heatmap of log1p(RPKM) by ARG class across samples (k-means clustering)"
 )
 ```
 
+# TPKM
 Categories normalizing by TPKM and then log1p, result for clustering and k-means directly
 
 ```{r}
@@ -380,7 +381,7 @@ reads_mat <- log1p(reads_mat)
 ```
 
 
-## Transform to RPKM (AS IN LUIS' PAPER)
+## Transform to RPKM (AS IN LUIS PAPER)
 ```{r}
 library(readr)
 library(vegan)
