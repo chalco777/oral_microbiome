@@ -82,6 +82,9 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
   - **Role:** Performs differential taxonomic analysis of the oral microbiome by generating barplots and boxplots of relative abundances and raw counts (before and after rarefaction), identifying the top species associated with caries and health, and preparing input files for LEfSe analysis.
   - **Sequence:** Run the barplot section after generating taxonomic abundance tables with Kraken2-Bracken and Sylph, and the boxplot section on the differential species identified by Sylph.
 
+  ![g8](barplot_boxplot/relative_abundance_plot.png)
+  ![g4](barplot_boxplot/boxplot_abundance_diffspecies_caries_beforerare.png)
+
 ### 2. `lefse_pcoa/`
 - **PCoA.md**
   - **Role:** Performs Principal Coordinates Analysis (PCoA) on rarefied abundance data, integrates metadata to visualize sample clustering by caries status, severity and others, and computes correlations between individual species and PCoA axes, outputting annotated plots and summary tables for interpretation.
@@ -89,6 +92,8 @@ A pipeline for characterizing the oral microbiome in health-versus-caries cohort
 - **pavian_to_lefse_preprocessing.R**
   - **Role:** Preprocesses data for LEfSe analysis, converting outputs from Pavian into the required format.
   - **Sequence:** Run before LEfSe script in `software_scripts/lefse.nf`  if using Pavian outputs.
+
+  ![g6](lefse_pcoa/PCoA_species_2.png)
 
 ### 3. `rgi_assemblies/`
 - **assemblies_maaslin_ancom.md**
